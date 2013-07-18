@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<head>
+	<title>Gene Lookup</title>
+	<h2>Welcome to the ATGU's Gene Lookup</h2>
+</head>
+<body>
+	<form action="{{ url_for('lookupGene') }}" method="POST">
+		Enter a gene:<input type="text" name="requestedGene">
+	</form>
+	{% if geneMutations != None: %}
+	{% if isConstrained == True%}
+		<p>This gene is constrained.</p>
+	{% else %}
+		<p>This gene is not constrained.</p>
+	{% endif %}
+		{% for group in geneMutations: %}
+			<p><b>{{ group.pop() }}</b></p>
+			<table border="1">
+				<tr>
+					<td><b>Gene Name</b></td>
+					<td><b>Mutation Type</b></td>
+					<td><b>AAchange</b></td>
+					<td><b>Chr</b></td>
+					<td><b>Pos</b></td>
+					<td><b>Ref</b></td>
+					<td><b>Alt</b></td>
+					<td><b>Study</b></td>
+					<td><b>Link to study</b></td>
+				</tr>
+				{% for mutation in group: %}
+					<tr>
+						<td>{{mutation[0]}}</td>
+						<td>{{mutation[1]}}</td>
+						<td>{{mutation[2]}}</td>
+						<td>{{mutation[3]}}</td>
+						<td>{{mutation[4]}}</td>
+						<td>{{mutation[5]}}</td>
+						<td>{{mutation[6]}}</td>
+						<td>{{mutation[8][2]}} with {{mutation[8][1]}} trios</td>
+						{% if 'www' in mutation[8][3]: %}
+							<td><a href="{{mutation[8][3]}}">{{mutation[8][3]}}</a></td>
+						{% else: %}
+							<td>{{mutation[8][3]}}</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</table>
+		{% endfor %}
+		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld) }}">
+			<button type="button">Download This Data</button>
+		</a>
+	{% endif %}
+			
+</body>
+</html>

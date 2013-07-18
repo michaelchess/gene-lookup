@@ -1,0 +1,11 @@
+#de novo header file
+##Autism spectrum disorders
+#1078 families
+study	num_trios	citation	pubmedlink
+1	343	Iossifov et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22542183
+2	175	Neale et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495311
+3	17	O'Roak et al. 2011	http://www.ncbi.nlm.nih.gov/pubmed/21572417
+4	189	O'Roak et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495309
+5	225	Sanders et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495306
+6	78	Unpublished US trios	NA
+7	51	Unpublished Finnish trios	NA

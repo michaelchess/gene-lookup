@@ -1,0 +1,6 @@
+#de novo header file
+##Intellectual disability
+#151 families
+study	num_trios	citation	pubmedlink
+1	100	de Ligt et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/23033978
+2	51	Rauch et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/23020937
