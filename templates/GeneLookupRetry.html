@@ -8,6 +8,21 @@
 		Enter a gene:<input type="text" name="requestedGene">
 	</form>
 	{% if geneMutations != None: %}
+	{% if otherGeneInfo != None: %}
+	<h2>{{otherGeneInfo[1]}}</h2>
+	<p>Chromosome: {{otherGeneInfo[2]}}</p>
+	<p>Start--Stop: {{otherGeneInfo[3]}}--{{otherGeneInfo[4]}}</p>
+	<p># Base Pairs: {{otherGeneInfo[5]}}</p>
+	<dl>
+		<dt><b>Per Trio Probability of Mutation:</b></dt>
+			<dd>Synonymous: {{otherGeneInfo[7]}}</dd>
+			<dd>Missense: {{otherGeneInfo[8]}}</dd>
+			<dd>Loss of Function: {{otherGeneInfo[9]}}</dd>
+		<dt><b>Constraint Scores:</b></dt>
+			<dd style="color: #0000FF;">Z syn: {{otherGeneInfo[23]}}</dd>
+			<dd style="color: #FF0000;">Z mis: {{otherGeneInfo[24]}}</dd>
+			<dd style="color: #FF0000;">Z LoF: {{otherGeneInfo[26]}}</dd>
+	</dl>
 	{% if isConstrained == True%}
 		<p>This gene is constrained.</p>
 	{% else %}
@@ -17,7 +32,6 @@
 			<p><b>{{ group.pop() }}</b></p>
 			<table border="1">
 				<tr>
-					<td><b>Gene Name</b></td>
 					<td><b>Mutation Type</b></td>
 					<td><b>AAchange</b></td>
 					<td><b>Chr</b></td>
@@ -29,7 +43,6 @@
 				</tr>
 				{% for mutation in group: %}
 					<tr>
-						<td>{{mutation[0]}}</td>
 						<td>{{mutation[1]}}</td>
 						<td>{{mutation[2]}}</td>
 						<td>{{mutation[3]}}</td>
@@ -49,6 +62,9 @@
 		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld) }}">
 			<button type="button">Download This Data</button>
 		</a>
+	{% else: %}
+		<p>Gene not found in our database.</p>
+	{% endif %}
 	{% endif %}
 			
 </body>

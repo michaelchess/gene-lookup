@@ -82,10 +82,28 @@ def lookupGene():
 		for mut in group:
 			if len(mut) >= 9:
 				if len(mut[8]) >= 4:
-					print mut
+					#print mut
 					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'#+','+(mut[8][3].replace('\n', ''))+'\n'
 					#downloadableInfo.write(mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][1]+','+(mut[8][3].replace('\n', ''))+'\n')
-	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO)
+	
+	geneData = open('esp6500_ac10_Zdata.txt', 'r')
+	allData = geneData.read()
+	eachGene = allData.split('\r')
+	print len(eachGene)
+	genesArray = []
+	for gene in eachGene:
+		genesArray.append(gene.split('\t'))
+	geneSuppInfo = genesArray[0]
+	for gene in genesArray:
+		if gene[1] == theGene:
+			geneSuppInfo = gene
+			geneSuppInfo[7] = float(geneSuppInfo[7])*2
+			geneSuppInfo[8] = float(geneSuppInfo[8])*2
+			geneSuppInfo[9] = float(geneSuppInfo[9])*2
+			break
+	if geneSuppInfo[1] == 'gene':
+		geneSuppInfo = None
+	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo)
 
 @app.route('/downloadGeneMuts/<downloadString>')
 def downloadGeneMuts(downloadString):
