@@ -106,7 +106,6 @@ def lookupGene():
 		geneSuppInfo = None
 	
 	
-	
 	overlapMutProbsReturns = []
 	for group in groupsMutsReturn:
 		stringMutsToRun = ""
@@ -128,7 +127,7 @@ def lookupGene():
 		overlapMutProbsReturns.append(theSignificance)
 		multMutsFile.close()
 	#print overlapMutProbsReturns[0]
-	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo)
+	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns)
 
 @app.route('/downloadGeneMuts/<downloadString>')
 def downloadGeneMuts(downloadString):

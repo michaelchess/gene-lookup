@@ -10,27 +10,27 @@
 	{% if geneMutations != None: %}
 	<p>---------------------------------------------------------------</p>
 	{% if otherGeneInfo != None: %}
-	<h2>{{otherGeneInfo[1]}}</h2>
-	<p>Chromosome: {{otherGeneInfo[2]}}</p>
-	<p>Start--Stop: {{otherGeneInfo[3]}}--{{otherGeneInfo[4]}}</p>
-	<p># Base Pairs: {{otherGeneInfo[5]}}</p>
-	<dl>
-		<dt><b>Per Trio Probability of Mutation:</b></dt>
-			<dd>Synonymous: {{otherGeneInfo[7]}}</dd>
-			<dd>Missense: {{otherGeneInfo[8]}}</dd>
-			<dd>Loss of Function: {{otherGeneInfo[9]}}</dd>
-		<dt><b>Constraint Scores:</b></dt>
-			<dd style="color: #0000FF;">Z syn: {{otherGeneInfo[23]}}</dd>
-			<dd style="color: #FF0000;">Z mis: {{otherGeneInfo[24]}}</dd>
-			<dd style="color: #FF0000;">Z LoF: {{otherGeneInfo[26]}}</dd>
-	</dl>
-	{% if isConstrained == True%}
-		<p>This gene is constrained.</p>
-	{% else %}
-		<p>This gene is not constrained.</p>
-	{% endif %}
+		<h2>{{otherGeneInfo[1]}}</h2>
+		<p>Chromosome: {{otherGeneInfo[2]}}</p>
+		<p>Start--Stop: {{otherGeneInfo[3]}}--{{otherGeneInfo[4]}}</p>
+		<p># Base Pairs: {{otherGeneInfo[5]}}</p>
+		<dl>
+			<dt><b>Per Trio Probability of Mutation:</b></dt>
+				<dd>Synonymous: {{otherGeneInfo[7]}}</dd>
+				<dd>Missense: {{otherGeneInfo[8]}}</dd>
+				<dd>Loss of Function: {{otherGeneInfo[9]}}</dd>
+			<dt><b>Constraint Scores:</b></dt>
+				<dd style="color: #0000FF;">Z syn: {{otherGeneInfo[23]}}</dd>
+				<dd style="color: #FF0000;">Z mis: {{otherGeneInfo[24]}}</dd>
+				<dd style="color: #FF0000;">Z LoF: {{otherGeneInfo[26]}}</dd>
+		</dl>
+		{% if isConstrained == True%}
+			<p>This gene is constrained.</p>
+		{% else %}
+			<p>This gene is not constrained.</p>
+		{% endif %}
 		{% for group in geneMutations: %}
-			<p><b>{{ group.pop() }}</b></p>
+			<h2><b>{{ group.pop() }}</b></h2>
 			<table border="1">
 				<tr>
 					<td><b>Mutation Type</b></td>
@@ -55,6 +55,31 @@
 							<td><a href="{{mutation[8][3]}}">{{mutation[8][3]}}</a></td>
 						{% else: %}
 							<td>{{mutation[8][3]}}</td>
+						{% endif %}
+					</tr>
+				{% endfor %}
+			</table>
+			<p>Probabilities of Mutation:</p>
+			<table border="1">
+				<tr>
+					<td><b>Gene Name</b></td>
+					<td><b>Mutations</b></td>
+					<td><b>#LoF</b></td>
+					<td><b>#Mis</b></td>
+					<td><b>Prob(LoF)</b></td>
+					<td><b>Prob(mis)</b></td>
+					<td><b>Prob(LoF+mis)</b></td>
+					<td><b>2*prob</b></td>
+					<td><b>exp#(343)</b></td>
+					<td><b>ppois</b></td>
+					<td><b>Compared to</b></td>
+				</tr>
+				{% for y in mutProbs.pop(0).split('\n') %}
+					<tr>
+						{% if (y.split('\t'))|length > 1: %}
+							{% for x in y.split('\t'): %}
+								<td>{{x}}</td>
+							{% endfor %}
 						{% endif %}
 					</tr>
 				{% endfor %}
