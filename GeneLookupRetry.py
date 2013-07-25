@@ -11,7 +11,6 @@ app.config.from_object(__name__)
 studyFiles=[]
 mutationFiles=[]
 for file in os.listdir('data'):
-	#files.append(open('data/'+file, 'r'))
 	if 'header' in file:
 		studyFiles.append(open('data/'+file, 'r'))
 	elif 'dnm' in file:
@@ -44,7 +43,6 @@ for file in mutationFiles:
 					mutStudyGroup = group[len(group)-2]
 					if not 'study' in theMutationInfo[7]:
 						theMutationInfo.append(group[int(theMutationInfo[7])+2])
-						#print theMutationInfo
 		mutationGroup.append(theMutationInfo)
 	mutationGroup.append(mutStudyGroup)
 	groupsOfMutations.append(mutationGroup)
@@ -72,25 +70,19 @@ def lookupGene():
 		for mutation in group:
 			if mutation[0] == theGene:
 				groupMut.append(mutation)
-				#print mutation
 		groupMut.append(group[len(group)-1])
 		groupsMutsReturn.append(groupMut)
-		#print groupsMutsReturn
 	nonStringIO = ''
 	for group in groupsMutsReturn:
 		nonStringIO += group[len(group)-1]
-		#downloadableInfo.write('\n'+group[len(group)-1])
 		for mut in group:
 			if len(mut) >= 9:
 				if len(mut[8]) >= 4:
-					#print mut
-					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'#+','+(mut[8][3].replace('\n', ''))+'\n'
-					#downloadableInfo.write(mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][1]+','+(mut[8][3].replace('\n', ''))+'\n')
+					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'
 	
 	geneData = open('esp6500_ac10_Zdata.txt', 'r')
 	allData = geneData.read()
 	eachGene = allData.split('\r')
-	#print len(eachGene)
 	genesArray = []
 	for gene in eachGene:
 		genesArray.append(gene.split('\t'))
@@ -126,17 +118,14 @@ def lookupGene():
 		print theSignificance
 		overlapMutProbsReturns.append(theSignificance)
 		multMutsFile.close()
-	#print overlapMutProbsReturns[0]
 	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns)
 
 @app.route('/downloadGeneMuts/<downloadString>')
 def downloadGeneMuts(downloadString):
-	#print downloadString
 	downloadableInfo = StringIO.StringIO()
 	downloadableInfo.write(str(downloadString))
 	downloadableInfo.seek(0)
 	return send_file(downloadableInfo, attachment_filename="GeneMutations.csv", as_attachment=True)
-	#return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained)
 
 if __name__ == '__main__':
 	app.run()
