@@ -2,6 +2,7 @@ from flask import Flask, request, Response, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory, send_file
 import os
 import StringIO
+import overlap2mutprobs
 
 DEBUG = True
 app = Flask(__name__)
@@ -89,7 +90,7 @@ def lookupGene():
 	geneData = open('esp6500_ac10_Zdata.txt', 'r')
 	allData = geneData.read()
 	eachGene = allData.split('\r')
-	print len(eachGene)
+	#print len(eachGene)
 	genesArray = []
 	for gene in eachGene:
 		genesArray.append(gene.split('\t'))
@@ -103,11 +104,35 @@ def lookupGene():
 			break
 	if geneSuppInfo[1] == 'gene':
 		geneSuppInfo = None
+	
+	
+	
+	overlapMutProbsReturns = []
+	for group in groupsMutsReturn:
+		stringMutsToRun = ""
+		numSubjects = 0
+		stringMutsToRun += theGene+'	'
+		for mutNum in range(0, len(group)-1):
+			stringMutsToRun += group[mutNum][1]+'/'
+			numSubjects+=int(group[mutNum][8][1])
+		stringMutsToRun = stringMutsToRun[:-1]
+		multMutsFile = open('multMutsFile.txt', 'r+')
+		multMutsFile.write(stringMutsToRun)
+		print "multMutsFile"
+		multMutsFile.seek(0)
+		print multMutsFile.read()
+		argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
+		theSignificance = overlap2mutprobs.main(argsForScript)
+		print "theSignificance"
+		print theSignificance
+		overlapMutProbsReturns.append(theSignificance)
+		multMutsFile.close()
+	#print overlapMutProbsReturns[0]
 	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo)
 
 @app.route('/downloadGeneMuts/<downloadString>')
 def downloadGeneMuts(downloadString):
-	print downloadString
+	#print downloadString
 	downloadableInfo = StringIO.StringIO()
 	downloadableInfo.write(str(downloadString))
 	downloadableInfo.seek(0)
