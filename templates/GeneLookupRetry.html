@@ -31,6 +31,7 @@
 		{% endif %}
 		{% for group in geneMutations: %}
 			<h2><b>{{ group.pop() }}</b></h2>
+			<p>In {{triosPerStudy.pop(0)}} combined trios.</p>
 			<table border="1">
 				<tr>
 					<td><b>Mutation Type</b></td>
@@ -59,7 +60,7 @@
 					</tr>
 				{% endfor %}
 			</table>
-			<p>Probabilities of Mutation:</p>
+			<p><b>Probabilities of Mutation:</b></p>
 			<table border="1">
 				<tr>
 					<td><b>Gene Name</b></td>
@@ -67,10 +68,10 @@
 					<td><b>#LoF</b></td>
 					<td><b>#Mis</b></td>
 					<td><b>Prob(LoF)</b></td>
-					<td><b>Prob(mis)</b></td>
 					<td><b>Prob(LoF+mis)</b></td>
+					<td><b>Prob(mis)</b></td>
 					<td><b>2*prob</b></td>
-					<td><b>exp#(343)</b></td>
+					<td><b>exp#({{secondTriosPerStudy.pop(0)}})</b></td>
 					<td><b>ppois</b></td>
 					<td><b>Compared to</b></td>
 				</tr>
