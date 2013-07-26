@@ -117,12 +117,16 @@ def lookupGene():
 		for mutNum in range(0, len(group)-1):
 			stringMutsToRun += group[mutNum][1]+'/'
 		stringMutsToRun = stringMutsToRun[:-1]
+		print "stringMutsToRun "+stringMutsToRun
 		multMutsFile = open('multMutsFile.txt', 'r+')
 		multMutsFile.write(stringMutsToRun)
 		multMutsFile.seek(0)
-		argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
-		theSignificance = overlap2mutprobs.main(argsForScript)
-		overlapMutProbsReturns.append(theSignificance)
+		if len(group) > 1:
+			argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
+			theSignificance = overlap2mutprobs.main(argsForScript)
+			overlapMutProbsReturns.append(theSignificance)
+		else:
+			overlapMutProbsReturns.append("noMutations")
 		multMutsFile.close()
 	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios)
 
