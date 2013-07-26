@@ -23,9 +23,7 @@ for file in studyFiles:
 	for line in file:
 		if '##' in line:
 			studyGroupName = line.replace('##', '')
-		elif '#' in line:
-			print "caught header file comment"
-		else:
+		elif not '#' in line:
 			studyGroup.append(line.split('\t'))
 	studyGroupId = file.name.split('_')
 	studyGroup.append(studyGroupName)
@@ -55,8 +53,6 @@ for group in groupsOfStudies:
 	for study in group:
 		if not 'study' in study[0]:
 			if not isinstance(study, basestring):
-				print "adding to numTrios"
-				print study
 				numTrios += int(study[1])
 	triosPerStudyGroup.append(numTrios)
 	numTrios = 0
@@ -114,27 +110,18 @@ def lookupGene():
 	poppableNumTrios = list(triosPerStudyGroup)
 	holderNumTrios = list(triosPerStudyGroup)
 	holderTwoNumTrios = list(triosPerStudyGroup)
-	print groupsMutsReturn
-	print triosPerStudyGroup
 	for group in groupsMutsReturn:
 		stringMutsToRun = ""
 		numSubjects = poppableNumTrios.pop(0)
 		stringMutsToRun += theGene+'	'
 		for mutNum in range(0, len(group)-1):
 			stringMutsToRun += group[mutNum][1]+'/'
-			#numSubjects+=int(group[mutNum][8][1])
 		stringMutsToRun = stringMutsToRun[:-1]
 		multMutsFile = open('multMutsFile.txt', 'r+')
 		multMutsFile.write(stringMutsToRun)
-		print "multMutsFile"
 		multMutsFile.seek(0)
-		print multMutsFile.read()
-		#numTriosPerStudy.append(numSubjects)
-		#secondTriosPerStudy.append(numSubjects)
 		argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
 		theSignificance = overlap2mutprobs.main(argsForScript)
-		print "theSignificance"
-		print theSignificance
 		overlapMutProbsReturns.append(theSignificance)
 		multMutsFile.close()
 	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios)
