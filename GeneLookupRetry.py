@@ -81,13 +81,8 @@ def lookupGene():
 				groupMut.append(mutation)
 		groupMut.append(group[len(group)-1])
 		groupsMutsReturn.append(groupMut)
-	nonStringIO = ''
-	for group in groupsMutsReturn:
-		nonStringIO += group[len(group)-1]
-		for mut in group:
-			if len(mut) >= 9:
-				if len(mut[8]) >= 4:
-					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'
+	
+	nonStringIO = theGene+'\n\n'
 	
 	geneData = open('esp6500_ac10_Zdata.txt', 'r')
 	allData = geneData.read()
@@ -105,6 +100,23 @@ def lookupGene():
 			break
 	if geneSuppInfo[1] == 'gene':
 		geneSuppInfo = None
+	nonStringIO += 'Chromosome:,'+geneSuppInfo[2]+'\nStart--Stop:,'+geneSuppInfo[3]+'--'+geneSuppInfo[4]+'\n# BasePairs:,'+geneSuppInfo[5]
+	nonStringIO += 'Per Trio Probability of Mutation:\n , Synonymous:,'+repr(geneSuppInfo[7])+'\n ,Missense:,'+repr(geneSuppInfo[8])+'\n ,Loss of Function:,'+repr(geneSuppInfo[9])
+	nonStringIO += 'Constraint Scores:\n ,Z syn:,'+geneSuppInfo[23]+'\n ,Z mis:,'+geneSuppInfo[24]+'\n ,Z LoF:,'+geneSuppInfo[26]
+	if constrained == True:
+		nonStringIO += '\n\nThis gene is constrained.\n'
+	else:
+		nonStringIO += '\n\nThis gene is not constrained.\n'
+	for group in groupsMutsReturn:
+		nonStringIO += group[len(group)-1]
+		nonStringIO += 'Mutation Type, AAchange, Chr, Pos, Ref, Alt, Study, Link to study\n'
+		#nonStringIO += 'Gene Name, Mutations, #Lof, Prob(LoF), Prob(LoF+mis), Prob(mis), 2*prob, exp#, ppois, Compared to\n'
+		for mut in group:
+			if len(mut) >= 9:
+				if len(mut[8]) >= 4:
+					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'
+	
+	
 	
 	overlapMutProbsReturns = []
 	poppableNumTrios = list(triosPerStudyGroup)
