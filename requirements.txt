@@ -4,4 +4,5 @@ MarkupSafe==0.18
 Werkzeug==0.9.1
 distribute==0.6.34
 itsdangerous==0.22
+rpy2==2.3.6
 wsgiref==0.1.2
