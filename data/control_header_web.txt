@@ -1,0 +1,5 @@
+#de novo header file
+##Controls
+#264 families
+study	num_trios	citation	pubmedlink
+1	264	Zaidi et al. 2013	http://www.ncbi.nlm.nih.gov/pubmed/23665959
