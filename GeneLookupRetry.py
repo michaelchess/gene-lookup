@@ -116,7 +116,8 @@ def lookupGene():
 				if len(mut[8]) >= 4:
 					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'
 	
-	
+	for group in groupsMutsReturn:
+		group[len(group)-1] = group[len(group)-1].rstrip()
 	
 	overlapMutProbsReturns = []
 	poppableNumTrios = list(triosPerStudyGroup)
@@ -136,6 +137,7 @@ def lookupGene():
 		if len(group) > 1:
 			argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
 			theSignificance = overlap2mutprobs.main(argsForScript)
+			print theSignificance
 			overlapMutProbsReturns.append(theSignificance)
 		else:
 			overlapMutProbsReturns.append("noMutations")
