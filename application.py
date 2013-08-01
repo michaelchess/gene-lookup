@@ -7,6 +7,7 @@ import overlap2mutprobs
 DEBUG = True
 app = Flask(__name__)
 app.config.from_object(__name__)
+application = app
 
 studyFiles=[]
 mutationFiles=[]
