@@ -3,6 +3,7 @@ from flask import Flask, request, Response, session, g, redirect, url_for, \
 import os
 import StringIO
 import overlap2mutprobs
+from datetime import datetime
 
 DEBUG = True
 app = Flask(__name__)
@@ -175,7 +176,9 @@ def downloadGeneMuts(downloadString):
 	downloadableInfo = StringIO.StringIO()
 	downloadableInfo.write(str(downloadString))
 	downloadableInfo.seek(0)
-	return send_file(downloadableInfo, attachment_filename="GeneMutations.csv", as_attachment=True)
+	time = datetime.now()
+	splitTime = str(time).rsplit('.', 1)[0]
+	return send_file(downloadableInfo, attachment_filename= "GeneMutations "+splitTime+".csv", as_attachment=True)
 
 @app.route('/downloadConstraints')
 def downloadConstraints():
@@ -194,7 +197,9 @@ def downloadConstraints():
 		line = line.split('\t')
 		dwnldConst.write(line[1]+'\t'+line[23]+'\t'+line[24]+'\t'+line[26]+'\n')
 	dwnldConst.seek(0)
-	return send_file(dwnldConst, attachment_filename="ATGUConstraintScores.txt", as_attachment=True)
+	time = datetime.now()
+	splitTime = str(time).rsplit('.', 1)[0]
+	return send_file(dwnldConst, attachment_filename="ATGUConstraintScores "+splitTime+".txt", as_attachment=True)
 
 if __name__ == '__main__':
 	app.run()
