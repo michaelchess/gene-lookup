@@ -133,7 +133,6 @@ def lookupGene():
 	for group in groupsMutsReturn:
 		nonStringIO += group[len(group)-1]
 		nonStringIO += 'Mutation Type, AAchange, Chr, Pos, Ref, Alt, Study, Link to study\n'
-		#nonStringIO += 'Gene Name, Mutations, #Lof, Prob(LoF), Prob(LoF+mis), Prob(mis), 2*prob, exp#, ppois, Compared to\n'
 		for mut in group:
 			if len(mut) >= 9:
 				if len(mut[8]) >= 4:
@@ -165,10 +164,6 @@ def lookupGene():
 		else:
 			overlapMutProbsReturns.append("noMutations")
 		multMutsFile.close()
-	#for group in overlapMutProbsReturns:
-	#	for line in group:
-	#		line = line.split('\t')
-	#		line = [int(line[2])+int(line[3]), line[9]]
 	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios)
 
 @app.route('/downloadGeneMuts/<downloadString>')
@@ -187,12 +182,6 @@ def downloadConstraints():
 	constrainedGenes = open('constrained_1003.txt', 'r')
 	infoFile = open('esp6500_ac10_Zdata.txt', 'r')
 	otherInfo = infoFile.read().split('\r')
-	'''for gene in constrainedGenes:
-		for line in otherInfo:
-			line = line.split('\t')
-			if line[1] == gene:
-				dwnldConst.write(gene+'\t'+line[23]+'\t'+line[24]+'\t'+line[26]+'\n')
-	dwnldConst.seek(0)'''
 	for line in otherInfo:
 		line = line.split('\t')
 		dwnldConst.write(line[1]+'\t'+line[23]+'\t'+line[24]+'\t'+line[26]+'\n')
