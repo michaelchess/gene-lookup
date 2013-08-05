@@ -38,7 +38,8 @@
 		<button onclick="hideAll()">Hide All</button>
 		{% for group in geneMutations: %}
 			<h1><b>{{ group[(group|length)-1] }}</b>
-			<button onclick="ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</button>
+			<a href="javascript:ShowHide('{{ group[(group|length)-1] }}')"><img id="{{ group[(group|length)-1] }}img" src="{{url_for('static', filename='arrow_closed.jpg')}}"/></a>
+			<!--<button onclick="ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</button>-->
 			</h1>
 			<!--<a href="javascript:ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</a>-->
 		<div id="{{group.pop()}}" style="display: none;">
@@ -52,7 +53,7 @@
 					<td><b>Ref</b></td>
 					<td><b>Alt</b></td>
 					<td><b>Study</b></td>
-					<td><b>Link to study</b></td>
+					<td><b>Pubmed ID</b></td>
 				</tr>
 				{% for mutation in group: %}
 					<tr>
@@ -64,7 +65,7 @@
 						<td>{{mutation[6]}}</td>
 						<td>{{mutation[8][2]}} with {{mutation[8][1]}} trios</td>
 						{% if 'www' in mutation[8][3]: %}
-							<td><a href="{{mutation[8][3]}}">{{mutation[8][3]}}</a></td>
+							<td><a href="{{mutation[8][3]}}" target="_blank">{{mutation[8][3].rsplit('/', 1)[1]}}</a></td>
 						{% else: %}
 							<td>{{mutation[8][3]}}</td>
 						{% endif %}
@@ -92,7 +93,9 @@
 			divs = document.getElementsByTagName('div');
 			for(var i = 0; i < divs.length; i++){
 				if(divs[i].id != 'page'){
+					//ShowHide(divs[i].id);
 					divs[i].style.display = 'inline';
+					document.getElementById(divs[i].id+'img').src = "{{url_for('static', filename='arrow_open.jpg')}}";
 				}
 			}
 		}
@@ -101,14 +104,17 @@
 			for(var i = 0; i < divs.length; i++){
 				if(divs[i].id != 'page'){
 					divs[i].style.display = 'none';
+					document.getElementById(divs[i].id+'img').src = "{{url_for('static', filename='arrow_closed.jpg')}}";
 				}
 			}
 		}
 		function ShowHide(divId){
 			if(document.getElementById(divId).style.display == 'none'){
 				document.getElementById(divId).style.display = 'inline';
+				document.getElementById(divId+'img').src = "{{url_for('static', filename='arrow_open.jpg')}}";
 			} else {
 				document.getElementById(divId).style.display = 'none';
+				document.getElementById(divId+'img').src = "{{url_for('static', filename='arrow_closed.jpg')}}";
 			}
 		}
 	</script>
