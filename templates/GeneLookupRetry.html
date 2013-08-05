@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <head>
 	<title>Gene Lookup</title>
-	<h2>Welcome to the ATGU's Gene Lookup</h2>
+	<h1 class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
+	<!--<link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
 </head>
 <body>
 	<form action="{{ url_for('lookupGene') }}" method="POST">
 		Enter a gene:<input type="text" name="requestedGene">
 	</form>
+	<p>Ex: SCN2A<br>
+	---------------------------------------------------------------<br>
+	This is a test version of a new utility that provides access to expected mutation probabilities, constraint scores based on deviation of observed standing variationpatterns from this model (higher values = more constrained (fewer variants observed than expected), and a table and analysis of published and unpublished de novo mutations in several major disease categories from a curated internal database.</p>
+	<div id="page">
 	{% if geneMutations != None: %}
-	<p>---------------------------------------------------------------</p>
 	{% if otherGeneInfo != None: %}
-		<h2>{{otherGeneInfo[1]}}</h2>
+		<h1 class="pageTitle">{{otherGeneInfo[1]}}</h1>
 		<p>Chromosome: {{otherGeneInfo[2]}}</p>
 		<p>Start--Stop: {{otherGeneInfo[3]}}--{{otherGeneInfo[4]}}</p>
 		<p># Base Pairs: {{otherGeneInfo[5]}}</p>
@@ -32,7 +36,7 @@
 		<button onclick="showAll()">Show All</button>
 		<button onclick="hideAll()">Hide All</button>
 		{% for group in geneMutations: %}
-			<h2><b>{{ group[(group|length)-1] }}</b></h2>
+			<h1><b>{{ group[(group|length)-1] }}</b></h1>
 			<button onclick="ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</button>
 			<!--<a href="javascript:ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</a>-->
 		<div id="{{group.pop()}}" style="display: none;">
@@ -66,30 +70,11 @@
 				{% endfor %}
 			</table>
 			<p><b>Probabilities of Mutation:</b></p>
-			<table border="1">
-				<tr>
-					<td><b>Gene Name</b></td>
-					<td><b>Mutations</b></td>
-					<td><b>#LoF</b></td>
-					<td><b>#Mis</b></td>
-					<td><b>Prob(LoF)</b></td>
-					<td><b>Prob(LoF+mis)</b></td>
-					<td><b>Prob(mis)</b></td>
-					<td><b>2*prob</b></td>
-					<td><b>exp#({{secondTriosPerStudy.pop(0)}})</b></td>
-					<td><b>ppois</b></td>
-					<td><b>Compared to</b></td>
-				</tr>
-				{% for y in mutProbs.pop(0).split('\n') %}
-					<tr>
-						{% if (y.split('\t'))|length > 1: %}
-							{% for x in y.split('\t'): %}
-								<td>{{x}}</td>
-							{% endfor %}
-						{% endif %}
-					</tr>
-				{% endfor %}
-			</table>
+			{% if mutProbs[0].split('\n')[0].split('\t')|length > 1 and mutProbs[0].split('\n')[1].split('\t')|length > 1: %}
+				<p>P({{mutProbs[0].split('\n')[0].split('\t')[2]}} LoF in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[0].split('\t')[9]}}</p>
+				<p>P({{mutProbs[0].split('\n')[1].split('\t')[2]}} LoF+Missense in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[1].split('\t')[9]}}</p>
+			{% endif %}
+			{% if secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}{% endif %}
 		</div>
 		{% endfor %}
 		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld) }}">
@@ -99,17 +84,22 @@
 		<p>Gene not found in our database.</p>
 	{% endif %}
 	{% endif %}
+	</div>
 	<script type="text/javascript">
 		function showAll(){
 			divs = document.getElementsByTagName('div');
 			for(var i = 0; i < divs.length; i++){
-				divs[i].style.display = 'inline';
+				if(divs[i].id != 'page'){
+					divs[i].style.display = 'inline';
+				}
 			}
 		}
 		function hideAll(){
 			divs = document.getElementsByTagName('div');
 			for(var i = 0; i < divs.length; i++){
-				divs[i].style.display = 'none';
+				if(divs[i].id != 'page'){
+					divs[i].style.display = 'none';
+				}
 			}
 		}
 		function ShowHide(divId){
