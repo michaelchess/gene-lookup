@@ -33,11 +33,13 @@
 		{% else %}
 			<p>This gene is not constrained.</p>
 		{% endif %}
+		<a href={{url_for('downloadConstraints')}}><button style="display: block;">Download Constraint Scores</button></a>
 		<button onclick="showAll()">Show All</button>
 		<button onclick="hideAll()">Hide All</button>
 		{% for group in geneMutations: %}
-			<h1><b>{{ group[(group|length)-1] }}</b></h1>
+			<h1><b>{{ group[(group|length)-1] }}</b>
 			<button onclick="ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</button>
+			</h1>
 			<!--<a href="javascript:ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</a>-->
 		<div id="{{group.pop()}}" style="display: none;">
 			<p>In {{triosPerStudy.pop(0)}} combined trios.</p>

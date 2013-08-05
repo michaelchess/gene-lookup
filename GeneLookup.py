@@ -177,5 +177,24 @@ def downloadGeneMuts(downloadString):
 	downloadableInfo.seek(0)
 	return send_file(downloadableInfo, attachment_filename="GeneMutations.csv", as_attachment=True)
 
+@app.route('/downloadConstraints')
+def downloadConstraints():
+	dwnldConst = StringIO.StringIO()
+	dwnldConst.write('Gene\tZ-syn\tZ-Mis\tZ-LoF\n')
+	constrainedGenes = open('constrained_1003.txt', 'r')
+	infoFile = open('esp6500_ac10_Zdata.txt', 'r')
+	otherInfo = infoFile.read().split('\r')
+	'''for gene in constrainedGenes:
+		for line in otherInfo:
+			line = line.split('\t')
+			if line[1] == gene:
+				dwnldConst.write(gene+'\t'+line[23]+'\t'+line[24]+'\t'+line[26]+'\n')
+	dwnldConst.seek(0)'''
+	for line in otherInfo:
+		line = line.split('\t')
+		dwnldConst.write(line[1]+'\t'+line[23]+'\t'+line[24]+'\t'+line[26]+'\n')
+	dwnldConst.seek(0)
+	return send_file(dwnldConst, attachment_filename="ATGUConstraintScores.txt", as_attachment=True)
+
 if __name__ == '__main__':
 	app.run()
