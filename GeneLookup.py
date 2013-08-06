@@ -198,7 +198,7 @@ def getStudies():
 	studyInfo = []
 	numTriosHolder = list(triosPerStudyGroup)
 	for group in groupsOfStudies:
-		studyInfo.append([group[len(group)-2], len(group)-2, numTriosHolder.pop(0)])
+		studyInfo.append([group[len(group)-2], len(group)-3, numTriosHolder.pop(0)])
 	return render_template('StudyLists.html', studyInfo=studyInfo)
 
 @app.route('/getMutationInfo')
