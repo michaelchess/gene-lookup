@@ -215,9 +215,9 @@ def getMutInfo():
 			else:
 				thisGroup[3] += 1
 		totMuts = thisGroup[1]+thisGroup[2]+thisGroup[3]
-		thisGroup[1] = (thisGroup[1]/totMuts)+1
-		thisGroup[2] = (thisGroup[2]/totMuts)+1
-		thisGroup[3] = (thisGroup[3]/totMuts)+1
+		thisGroup[1] = (float(thisGroup[1])/float(totMuts))+1
+		thisGroup[2] = (float(thisGroup[2])/float(totMuts))+1
+		thisGroup[3] = (float(thisGroup[3])/float(totMuts))+1
 		mutDistInfo.append(thisGroup)
 	return render_template('MutationDistribution.html', mutDistInfo=mutDistInfo)
 
