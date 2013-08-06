@@ -10,6 +10,9 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 application = app
 
+SERVER_NAME = '127.0.0.1'
+SERVER_PORT = 5003
+
 studyFiles=[]
 mutationFiles=[]
 for file in os.listdir('data'):
@@ -190,5 +193,33 @@ def downloadConstraints():
 	splitTime = str(time).rsplit('.', 1)[0]
 	return send_file(dwnldConst, attachment_filename="ATGUConstraintScores "+splitTime+".txt", as_attachment=True)
 
+@app.route('/getStudies')
+def getStudies():
+	studyInfo = []
+	numTriosHolder = list(triosPerStudyGroup)
+	for group in groupsOfStudies:
+		studyInfo.append([group[len(group)-2], len(group)-2, numTriosHolder.pop(0)])
+	return render_template('StudyLists.html', studyInfo=studyInfo)
+
+@app.route('/getMutationInfo')
+def getMutInfo():
+	mutDistInfo = []
+	studyGroupHolder = list(groupsOfStudies)
+	for group in groupsOfMutations:
+		thisGroup = [studyGroupHolder[0][len(studyGroupHolder.pop(0))-2], 0.0, 0.0, 0.0]
+		for mutation in group:
+			if 'syn' in mutation[2].lower():
+				thisGroup[1] += 1
+			elif 'mis' in mutation[2].lower():
+				thisGroup[2] += 1
+			else:
+				thisGroup[3] += 1
+		totMuts = thisGroup[1]+thisGroup[2]+thisGroup[3]
+		thisGroup[1] = (thisGroup[1]/totMuts)+1
+		thisGroup[2] = (thisGroup[2]/totMuts)+1
+		thisGroup[3] = (thisGroup[3]/totMuts)+1
+		mutDistInfo.append(thisGroup)
+	return render_template('MutationDistribution.html', mutDistInfo=mutDistInfo)
+
 if __name__ == '__main__':
-	app.run()
+	app.run(SERVER_NAME, SERVER_PORT)
