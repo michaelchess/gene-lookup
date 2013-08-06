@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<td><b>Study Group</b></td>
+			<td><b>Number of Studies</b></td>
+			<td><b>Number of Trios in Group</b></td>
+		{% for row in studyInfo: %}
+			<tr>
+				{% for thing in row: %}
+					<td>{{thing}}</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
+</body>
+</html>
