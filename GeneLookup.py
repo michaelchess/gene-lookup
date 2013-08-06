@@ -208,16 +208,16 @@ def getMutInfo():
 	for group in groupsOfMutations:
 		thisGroup = [studyGroupHolder[0][len(studyGroupHolder.pop(0))-2], 0.0, 0.0, 0.0]
 		for mutation in group:
-			if 'syn' in mutation[2].lower():
+			if 'syn' in mutation[1].lower() or 'sil' in mutation[1].lower():
 				thisGroup[1] += 1
-			elif 'mis' in mutation[2].lower():
+			elif 'mis' in mutation[1].lower():
 				thisGroup[2] += 1
 			else:
 				thisGroup[3] += 1
 		totMuts = thisGroup[1]+thisGroup[2]+thisGroup[3]
-		thisGroup[1] = (float(thisGroup[1])/float(totMuts))+1
-		thisGroup[2] = (float(thisGroup[2])/float(totMuts))+1
-		thisGroup[3] = (float(thisGroup[3])/float(totMuts))+1
+		thisGroup[1] = round_to_n((float(thisGroup[1])/float(totMuts))*100, 3)
+		thisGroup[2] = round_to_n((float(thisGroup[2])/float(totMuts))*100, 3)
+		thisGroup[3] = round_to_n((float(thisGroup[3])/float(totMuts))*100, 3)
 		mutDistInfo.append(thisGroup)
 	return render_template('MutationDistribution.html', mutDistInfo=mutDistInfo)
 
