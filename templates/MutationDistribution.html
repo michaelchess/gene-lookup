@@ -10,10 +10,12 @@
 			<td><b>Loss of Function (%)</b></td>
 		{% for row in mutDistInfo: %}
 			<tr>
-				{% for thing in row: %}
-					<td>{{thing}}</td>
+				<td>{{row[0]}}</td>
+				{% for y in range(1, row|length): %}
+					<td style="text-align:right;">{{row[y][0]}} ({{row[y][1]}}%)</td>
 				{% endfor %}
 			</tr>
 		{% endfor %}
+	</table>
 </body>
 </html>

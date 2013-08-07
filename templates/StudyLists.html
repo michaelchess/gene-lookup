@@ -10,8 +10,9 @@
 			<td><b>Number of Trios in Group</b></td>
 		{% for row in studyInfo: %}
 			<tr>
-				{% for thing in row: %}
-					<td>{{thing}}</td>
+				<td>{{row[0]}}</td>
+				{% for y in range(1, row|length): %}
+					<td style="text-align:right;">{{row[y]}}</td>
 				{% endfor %}
 			</tr>
 		{% endfor %}

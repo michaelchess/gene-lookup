@@ -126,20 +126,20 @@ def lookupGene():
 	if geneSuppInfo[1] == 'gene':
 		geneSuppInfo = None
 	if geneSuppInfo != None:
-		nonStringIO += 'Chromosome:,'+geneSuppInfo[2]+'\nStart--Stop:,'+geneSuppInfo[3]+'--'+geneSuppInfo[4]+'\n# BasePairs:,'+geneSuppInfo[5]
-		nonStringIO += 'Per Trio Probability of Mutation:\n , Synonymous:,'+repr(geneSuppInfo[7])+'\n ,Missense:,'+repr(geneSuppInfo[8])+'\n ,Loss of Function:,'+repr(geneSuppInfo[9])
-		nonStringIO += 'Constraint Scores:\n ,Z syn:,'+repr(geneSuppInfo[23])+'\n ,Z mis:,'+repr(geneSuppInfo[24])+'\n ,Z LoF:,'+repr(geneSuppInfo[26])
+		nonStringIO += 'Chromosome:	'+geneSuppInfo[2]+'\nStart--Stop:	'+geneSuppInfo[3]+'--'+geneSuppInfo[4]+'\n# BasePairs:	'+geneSuppInfo[5]
+		nonStringIO += '\n\nPer Trio Probability of Mutation:\n 	 Synonymous:	'+repr(geneSuppInfo[7])+'\n 	Missense:	'+repr(geneSuppInfo[8])+'\n 	Loss of Function:	'+repr(geneSuppInfo[9])
+		nonStringIO += '\nConstraint Scores:\n 	Z syn:	'+repr(geneSuppInfo[23])+'\n 	Z mis:	'+repr(geneSuppInfo[24])+'\n 	Z LoF:	'+repr(geneSuppInfo[26])
 	if constrained == True:
 		nonStringIO += '\n\nThis gene is constrained.\n'
 	else:
 		nonStringIO += '\n\nThis gene is not constrained.\n'
 	for group in groupsMutsReturn:
-		nonStringIO += group[len(group)-1]
-		nonStringIO += 'Mutation Type, AAchange, Chr, Pos, Ref, Alt, Study, Link to study\n'
+		nonStringIO += '\n'+group[len(group)-1]
+		nonStringIO += 'Mutation Type	 AAchange	 Chr	 Pos	 Ref	 Alt	 Study\n'
 		for mut in group:
 			if len(mut) >= 9:
 				if len(mut[8]) >= 4:
-					nonStringIO += mut[0]+','+mut[1]+','+mut[2]+','+mut[3]+','+mut[4]+','+mut[5]+','+mut[6]+','+mut[8][2]+' with '+mut[8][1]+' trios\n'
+					nonStringIO += mut[1]+'	'+mut[2]+'	'+mut[3]+'	'+mut[4]+'	'+mut[5]+'	'+mut[6]+'	'+mut[8][2]+' with '+mut[8][1]+' trios\n'
 	
 	for group in groupsMutsReturn:
 		group[len(group)-1] = group[len(group)-1].rstrip()
@@ -167,16 +167,16 @@ def lookupGene():
 		else:
 			overlapMutProbsReturns.append("noMutations")
 		multMutsFile.close()
-	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios)
+	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios, theGene=theGene)
 
-@app.route('/downloadGeneMuts/<downloadString>')
-def downloadGeneMuts(downloadString):
+@app.route('/downloadGeneMuts/<downloadString>/<gene>')
+def downloadGeneMuts(downloadString, gene):
 	downloadableInfo = StringIO.StringIO()
 	downloadableInfo.write(str(downloadString))
 	downloadableInfo.seek(0)
 	time = datetime.now()
 	splitTime = str(time).rsplit('.', 1)[0]
-	return send_file(downloadableInfo, attachment_filename= "GeneMutations "+splitTime+".csv", as_attachment=True)
+	return send_file(downloadableInfo, attachment_filename= "ATGU Gene Lookup "+gene+" "+splitTime+".txt", as_attachment=True)
 
 @app.route('/downloadConstraints')
 def downloadConstraints():
@@ -206,18 +206,18 @@ def getMutInfo():
 	mutDistInfo = []
 	studyGroupHolder = list(groupsOfStudies)
 	for group in groupsOfMutations:
-		thisGroup = [studyGroupHolder[0][len(studyGroupHolder.pop(0))-2], 0.0, 0.0, 0.0]
+		thisGroup = [studyGroupHolder[0][len(studyGroupHolder.pop(0))-2], [0, 0.0], [0, 0.0], [0, 0.0]]
 		for mutation in group:
 			if 'syn' in mutation[1].lower() or 'sil' in mutation[1].lower():
-				thisGroup[1] += 1
+				thisGroup[1][0] += 1
 			elif 'mis' in mutation[1].lower():
-				thisGroup[2] += 1
+				thisGroup[2][0] += 1
 			else:
-				thisGroup[3] += 1
-		totMuts = thisGroup[1]+thisGroup[2]+thisGroup[3]
-		thisGroup[1] = round_to_n((float(thisGroup[1])/float(totMuts))*100, 3)
-		thisGroup[2] = round_to_n((float(thisGroup[2])/float(totMuts))*100, 3)
-		thisGroup[3] = round_to_n((float(thisGroup[3])/float(totMuts))*100, 3)
+				thisGroup[3][0] += 1
+		totMuts = thisGroup[1][0]+thisGroup[2][0]+thisGroup[3][0]
+		thisGroup[1][1] = round_to_n((float(thisGroup[1][0])/float(totMuts))*100, 3)
+		thisGroup[2][1] = round_to_n((float(thisGroup[2][0])/float(totMuts))*100, 3)
+		thisGroup[3][1] = round_to_n((float(thisGroup[3][0])/float(totMuts))*100, 3)
 		mutDistInfo.append(thisGroup)
 	return render_template('MutationDistribution.html', mutDistInfo=mutDistInfo)
 

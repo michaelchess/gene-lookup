@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
 	<title>Gene Lookup</title>
-	<h1 class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
+	<h2 class="pageTitle">Welcome to the ATGU's Gene Lookup</h2>
 	<!--<link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
 </head>
 <body>
@@ -82,7 +82,7 @@
 			{% if secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}{% endif %}
 		</div>
 		{% endfor %}
-		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld) }}">
+		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld, gene=theGene) }}">
 			<button type="button">Download This Data</button>
 		</a>
 	{% else: %}
