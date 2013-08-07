@@ -84,90 +84,93 @@ def initialize():
 downloadableInfo = StringIO.StringIO()
 theGene = ''
 mutsForFile = []
-@app.route('/lookupGene', methods=['POST'])
+@app.route('/lookupGene', methods=['POST', 'GET'])
 def lookupGene():
-	theGene = request.form['requestedGene']
-	theGene = theGene.upper()
-	groupsMutsReturn = []
-	downloadableInfo = StringIO.StringIO()
-	constrainList = open('constrained_1003.txt', 'r')
-	constrained = False
-	for line in constrainList:
-		if theGene == line.replace('\n', ''):
-			constrained = True
-	
-	for group in groupsOfMutations:
-		groupMut = []
-		for mutation in group:
-			if mutation[0] == theGene:
-				groupMut.append(mutation)
-		groupMut.append(group[len(group)-1])
-		groupsMutsReturn.append(groupMut)
-	
-	nonStringIO = theGene+'\n\n'
-	
-	geneData = open('esp6500_ac10_Zdata.txt', 'r')
-	allData = geneData.read()
-	eachGene = allData.split('\r')
-	genesArray = []
-	for gene in eachGene:
-		genesArray.append(gene.split('\t'))
-	geneSuppInfo = genesArray[0]
-	for gene in genesArray:
-		if gene[1] == theGene:
-			geneSuppInfo = gene
-			geneSuppInfo[7] = round_to_n(float(geneSuppInfo[7])*2, 3)
-			geneSuppInfo[8] = round_to_n(float(geneSuppInfo[8])*2, 3)
-			geneSuppInfo[9] = round_to_n(float(geneSuppInfo[9])*2, 3)
-			geneSuppInfo[23] = round_to_n(float(geneSuppInfo[23]), 3)
-			geneSuppInfo[24] = round_to_n(float(geneSuppInfo[24]), 3)
-			geneSuppInfo[26] = round_to_n(float(geneSuppInfo[26]), 3)
-			break
-	if geneSuppInfo[1] == 'gene':
-		geneSuppInfo = None
-	if geneSuppInfo != None:
-		nonStringIO += 'Chromosome:	'+geneSuppInfo[2]+'\nStart--Stop:	'+geneSuppInfo[3]+'--'+geneSuppInfo[4]+'\n# BasePairs:	'+geneSuppInfo[5]
-		nonStringIO += '\n\nPer Trio Probability of Mutation:\n 	 Synonymous:	'+repr(geneSuppInfo[7])+'\n 	Missense:	'+repr(geneSuppInfo[8])+'\n 	Loss of Function:	'+repr(geneSuppInfo[9])
-		nonStringIO += '\nConstraint Scores:\n 	Z syn:	'+repr(geneSuppInfo[23])+'\n 	Z mis:	'+repr(geneSuppInfo[24])+'\n 	Z LoF:	'+repr(geneSuppInfo[26])
-	if constrained == True:
-		nonStringIO += '\n\nThis gene is constrained.\n'
-	else:
-		nonStringIO += '\n\nThis gene is not constrained.\n'
-	for group in groupsMutsReturn:
-		nonStringIO += '\n'+group[len(group)-1]
-		nonStringIO += 'Mutation Type	 AAchange	 Chr	 Pos	 Ref	 Alt	 Study\n'
-		for mut in group:
-			if len(mut) >= 9:
-				if len(mut[8]) >= 4:
-					nonStringIO += mut[1]+'	'+mut[2]+'	'+mut[3]+'	'+mut[4]+'	'+mut[5]+'	'+mut[6]+'	'+mut[8][2]+' with '+mut[8][1]+' trios\n'
-	
-	for group in groupsMutsReturn:
-		group[len(group)-1] = group[len(group)-1].rstrip()
-	
-	overlapMutProbsReturns = []
-	poppableNumTrios = list(triosPerStudyGroup)
-	holderNumTrios = list(triosPerStudyGroup)
-	holderTwoNumTrios = list(triosPerStudyGroup)
-	for group in groupsMutsReturn:
-		stringMutsToRun = ""
-		numSubjects = poppableNumTrios.pop(0)
-		stringMutsToRun += theGene+'	'
-		for mutNum in range(0, len(group)-1):
-			stringMutsToRun += group[mutNum][1]+'/'
-		stringMutsToRun = stringMutsToRun[:-1]
-		print "stringMutsToRun "+stringMutsToRun
-		multMutsFile = open('multMutsFile.txt', 'r+')
-		multMutsFile.write(stringMutsToRun)
-		multMutsFile.seek(0)
-		if len(group) > 1:
-			argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
-			theSignificance = overlap2mutprobs.main(argsForScript)
-			print theSignificance
-			overlapMutProbsReturns.append(theSignificance)
+	if request.method == 'POST':
+		theGene = request.form['requestedGene']
+		theGene = theGene.upper()
+		groupsMutsReturn = []
+		downloadableInfo = StringIO.StringIO()
+		constrainList = open('constrained_1003.txt', 'r')
+		constrained = False
+		for line in constrainList:
+			if theGene == line.replace('\n', ''):
+				constrained = True
+		
+		for group in groupsOfMutations:
+			groupMut = []
+			for mutation in group:
+				if mutation[0] == theGene:
+					groupMut.append(mutation)
+			groupMut.append(group[len(group)-1])
+			groupsMutsReturn.append(groupMut)
+		
+		nonStringIO = theGene+'\n\n'
+		
+		geneData = open('esp6500_ac10_Zdata.txt', 'r')
+		allData = geneData.read()
+		eachGene = allData.split('\r')
+		genesArray = []
+		for gene in eachGene:
+			genesArray.append(gene.split('\t'))
+		geneSuppInfo = genesArray[0]
+		for gene in genesArray:
+			if gene[1] == theGene:
+				geneSuppInfo = gene
+				geneSuppInfo[7] = round_to_n(float(geneSuppInfo[7])*2, 3)
+				geneSuppInfo[8] = round_to_n(float(geneSuppInfo[8])*2, 3)
+				geneSuppInfo[9] = round_to_n(float(geneSuppInfo[9])*2, 3)
+				geneSuppInfo[23] = round_to_n(float(geneSuppInfo[23]), 3)
+				geneSuppInfo[24] = round_to_n(float(geneSuppInfo[24]), 3)
+				geneSuppInfo[26] = round_to_n(float(geneSuppInfo[26]), 3)
+				break
+		if geneSuppInfo[1] == 'gene':
+			geneSuppInfo = None
+		if geneSuppInfo != None:
+			nonStringIO += 'Chromosome:	'+geneSuppInfo[2]+'\nStart--Stop:	'+geneSuppInfo[3]+'--'+geneSuppInfo[4]+'\n# BasePairs:	'+geneSuppInfo[5]
+			nonStringIO += '\n\nPer Trio Probability of Mutation:\n 	 Synonymous:	'+repr(geneSuppInfo[7])+'\n 	Missense:	'+repr(geneSuppInfo[8])+'\n 	Loss of Function:	'+repr(geneSuppInfo[9])
+			nonStringIO += '\nConstraint Scores:\n 	Z syn:	'+repr(geneSuppInfo[23])+'\n 	Z mis:	'+repr(geneSuppInfo[24])+'\n 	Z LoF:	'+repr(geneSuppInfo[26])
+		if constrained == True:
+			nonStringIO += '\n\nThis gene is constrained.\n'
 		else:
-			overlapMutProbsReturns.append("noMutations")
-		multMutsFile.close()
-	return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios, theGene=theGene)
+			nonStringIO += '\n\nThis gene is not constrained.\n'
+		for group in groupsMutsReturn:
+			nonStringIO += '\n'+group[len(group)-1]
+			nonStringIO += 'Mutation Type	 AAchange	 Chr	 Pos	 Ref	 Alt	 Study\n'
+			for mut in group:
+				if len(mut) >= 9:
+					if len(mut[8]) >= 4:
+						nonStringIO += mut[1]+'	'+mut[2]+'	'+mut[3]+'	'+mut[4]+'	'+mut[5]+'	'+mut[6]+'	'+mut[8][2]+' with '+mut[8][1]+' trios\n'
+		
+		for group in groupsMutsReturn:
+			group[len(group)-1] = group[len(group)-1].rstrip()
+		
+		overlapMutProbsReturns = []
+		poppableNumTrios = list(triosPerStudyGroup)
+		holderNumTrios = list(triosPerStudyGroup)
+		holderTwoNumTrios = list(triosPerStudyGroup)
+		for group in groupsMutsReturn:
+			stringMutsToRun = ""
+			numSubjects = poppableNumTrios.pop(0)
+			stringMutsToRun += theGene+'	'
+			for mutNum in range(0, len(group)-1):
+				stringMutsToRun += group[mutNum][1]+'/'
+			stringMutsToRun = stringMutsToRun[:-1]
+			print "stringMutsToRun "+stringMutsToRun
+			multMutsFile = open('multMutsFile.txt', 'r+')
+			multMutsFile.write(stringMutsToRun)
+			multMutsFile.seek(0)
+			if len(group) > 1:
+				argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
+				theSignificance = overlap2mutprobs.main(argsForScript)
+				print theSignificance
+				overlapMutProbsReturns.append(theSignificance)
+			else:
+				overlapMutProbsReturns.append("noMutations")
+			multMutsFile.close()
+		return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios, theGene=theGene)
+	else:
+		return redirect(url_for('initialize'))
 
 @app.route('/downloadGeneMuts/<downloadString>/<gene>')
 def downloadGeneMuts(downloadString, gene):

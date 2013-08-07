@@ -1,20 +1,32 @@
 <!DOCTYPE html>
 <head>
 	<title>Gene Lookup</title>
-	<h2 class="pageTitle">Welcome to the ATGU's Gene Lookup</h2>
-	<!--<link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
+	<!--<h1 class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
+	<link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">-->
+	<link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+	<style>
+		p{
+			font-size: 1em;
+		}
+	</style>
 </head>
 <body>
+	<h1 style="text-align:center" class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
+<!--<div class="col-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1">-->
+<div class="col-12 col-sm-11 col-lg-11">
+<div style="position:relative; left:5%;">
 	<form action="{{ url_for('lookupGene') }}" method="POST">
-		Enter a gene:<input type="text" name="requestedGene">
+		Enter a gene:<input type="text" name="requestedGene" placeholder="Ex: SCN2A">
 	</form>
-	<p>Ex: SCN2A<br>
-	---------------------------------------------------------------<br>
+	<p style="font-size: 0.75em;">---------------------------------------------------------------<br>
 	This is a test version of a new utility that provides access to expected mutation probabilities, constraint scores based on deviation of observed standing variation patterns from this model (higher values = more constrained (fewer variants observed than expected), and a table and analysis of published and unpublished de novo mutations in several major disease categories from a curated internal database.</p>
-	<div id="page">
 	{% if geneMutations != None: %}
 	{% if otherGeneInfo != None: %}
 		<h1 class="pageTitle">{{otherGeneInfo[1]}}</h1>
+<div style="position:relative; left:3em">
 		<p>Chromosome: {{otherGeneInfo[2]}}</p>
 		<p>Start--Stop: {{otherGeneInfo[3]}}--{{otherGeneInfo[4]}}</p>
 		<p># Base Pairs: {{otherGeneInfo[5]}}</p>
@@ -33,27 +45,27 @@
 		{% else %}
 			<p>This gene is not constrained.</p>
 		{% endif %}
-		<a href={{url_for('downloadConstraints')}}><button style="display: block;">Download Constraint Scores</button></a>
-		<button onclick="showAll()">Show All</button>
-		<button onclick="hideAll()">Hide All</button>
+		<a href={{url_for('downloadConstraints')}}><button type="button" class="btn btn-default btn-xs" style="display: block;">Download Constraint Scores</button></a>
+		<h5><button type="button" class="btn btn-default btn-sm" onclick="showAll()">Show All</button>
+		<button type="button" class="btn btn-default btn-sm" onclick="hideAll()">Hide All</button></h5>
+		
 		{% for group in geneMutations: %}
-			<h1><b>{{ group[(group|length)-1] }}</b>
-			<a href="javascript:ShowHide('{{ group[(group|length)-1] }}')"><img id="{{ group[(group|length)-1] }}img" src="{{url_for('static', filename='arrow_closed.jpg')}}"/></a>
-			<!--<button onclick="ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</button>-->
-			</h1>
-			<!--<a href="javascript:ShowHide('{{ group[(group|length)-1] }}');">Show/Hide</a>-->
-		<div id="{{group.pop()}}" style="display: none;">
+			<h3><b>{{ group[(group|length)-1] }}</b>
+			<a href="javascript:ShowHide('{{ group[(group|length)-1] }}')"><img id="{{ group[(group|length)-1] }}img" src="{{url_for('static', filename='arrow_closed.jpg')}}" width="28px"/></a>
+			</h3>
+		<div class="studyGroup" id="{{group.pop()}}" style="display: none;">
+			{% if group|length >= 1: %}
 			<p>In {{triosPerStudy.pop(0)}} combined trios.</p>
-			<table border="1">
+			<table class="table">
 				<tr>
-					<td><b>Mutation Type</b></td>
-					<td><b>AAchange</b></td>
-					<td><b>Chr</b></td>
-					<td><b>Pos</b></td>
-					<td><b>Ref</b></td>
-					<td><b>Alt</b></td>
-					<td><b>Study</b></td>
-					<td><b>Pubmed ID</b></td>
+					<th>Mutation Type</th>
+					<th>AAchange</th>
+					<th>Chr</th>
+					<th>Pos</th>
+					<th>Ref</th>
+					<th>Alt</th>
+					<th>Study</th>
+					<th>Pubmed ID</th>
 				</tr>
 				{% for mutation in group: %}
 					<tr>
@@ -80,6 +92,9 @@
 				</script>
 			{% endif %}
 			{% if secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}{% endif %}
+			{% elif triosPerStudy.pop(0) and secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}
+				<p>No mutations found in this study group.</p>
+			{% endif %}
 		</div>
 		{% endfor %}
 		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld, gene=theGene) }}">
@@ -89,14 +104,16 @@
 		<p>Gene not found in our database.</p>
 	{% endif %}
 	{% endif %}
-	</div>
+</div>
+</div>
+</div>
 	<script type="text/javascript">
 		function addStringsInts(a, b){
 			alert("addingStringInts");
 			return (parseInt(a)+parseInt(b)).toString();
 		}
 		function showAll(){
-			divs = document.getElementsByTagName('div');
+			divs = document.getElementsByClassName('studyGroup');
 			for(var i = 0; i < divs.length; i++){
 				if(divs[i].id != 'page'){
 					//ShowHide(divs[i].id);
