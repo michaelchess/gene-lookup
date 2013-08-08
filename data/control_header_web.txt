@@ -6,5 +6,5 @@ study	num_trios	citation	pubmedlink
 2	343	Iossifov et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22542183
 3	50	O'Roak et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495309
 4	200	Sanders et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495306
-5	20	Rauch et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/23020937 ??
+5	20	Rauch et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/23020937
 6	22	Xu et al. 2011	http://www.ncbi.nlm.nih.gov/pubmed/21822266
