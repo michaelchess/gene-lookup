@@ -168,7 +168,17 @@ def lookupGene():
 			else:
 				overlapMutProbsReturns.append("noMutations")
 			multMutsFile.close()
-		return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios, theGene=theGene)
+		
+		zRankFile = open('ranked_z_genes.txt', 'r')
+		zRankOutOf = len(zRankFile.read().split('\n'))-2
+		zRankFile.seek(0)
+		zRank = None
+		for line in zRankFile:
+			if theGene in line:
+				zRank = line.split()[1]
+				print str(zRank)+'/'+str(zRankOutOf)
+			#print theGene+' '+line
+		return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios, theGene=theGene, zRank = zRank, zRankOutOf=zRankOutOf)
 	else:
 		return redirect(url_for('initialize'))
 
