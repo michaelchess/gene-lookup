@@ -159,12 +159,10 @@
 				{% endfor %}
 			</table>
 			<p><b>Probabilities of Mutation:</b></p>
-			{% if mutProbs[0].split('\n')[0].split('\t')|length > 1 and mutProbs[0].split('\n')[1].split('\t')|length > 1: %}
 				<script>
-					document.write("<p>P({{mutProbs[0].split('\n')[0].split('\t')[2]}} LoF in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[0].split('\t')[9]}}</p>");
-					document.write("<p>P("+(parseInt({{mutProbs[0].split('\n')[1].split('\t')[3]}})+parseInt({{mutProbs[0].split('\n')[1].split('\t')[2]}})).toString()+" LoF+Missense in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[1].split('\t')[9]}}</p>");
+					document.write("<p>P({{mutProbs[0].split('\n')[0].split('\t')[2]}} LoF in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[1].split('\t')[9]}}</p>");
+					document.write("<p>P("+(parseInt({{mutProbs[0].split('\n')[1].split('\t')[3]}})+parseInt({{mutProbs[0].split('\n')[1].split('\t')[2]}})).toString()+" LoF+Missense in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[0].split('\t')[9]}}</p>");
 				</script>
-			{% endif %}
 			{% if secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}{% endif %}
 			{% elif triosPerStudy.pop(0) and secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}
 				<p>No mutations found in this study group.</p>
