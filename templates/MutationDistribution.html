@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <head>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-	<table border="1">
+	<table id="mutationDistributionTable" class="table">
 		<tr>
 			<td><b>Study Group</b></td>
 			<td><b>Synonymous (%)</b></td>
@@ -12,7 +14,7 @@
 			<tr>
 				<td>{{row[0]}}</td>
 				{% for y in range(1, row|length): %}
-					<td style="text-align:right;">{{row[y][0]}} ({{row[y][1]}}%)</td>
+					<td >{{row[y][0]}} ({{row[y][1]}}%)</td>
 				{% endfor %}
 			</tr>
 		{% endfor %}
