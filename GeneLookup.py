@@ -157,8 +157,12 @@ def lookupGene():
 				stringMutsToRun += group[mutNum][1]+'/'
 			stringMutsToRun = stringMutsToRun[:-1]
 			print "stringMutsToRun "+stringMutsToRun
-			multMutsFile = open('multMutsFile.txt', 'r+')
+			multMutsFile = open('multMutsFile.txt', 'w+')
+			multMutsFile
 			multMutsFile.write(stringMutsToRun)
+			multMutsFile.seek(0)
+			print "MULTMUTSFILE "+multMutsFile.read()
+			print stringMutsToRun
 			multMutsFile.seek(0)
 			if len(group) > 1:
 				argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
@@ -168,6 +172,7 @@ def lookupGene():
 				print theSignificance
 				overlapMutProbsReturns.append(theSignificance)
 			else:
+				print "noMutations"
 				overlapMutProbsReturns.append("noMutations")
 			multMutsFile.close()
 		
