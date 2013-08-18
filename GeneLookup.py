@@ -285,4 +285,4 @@ def getMutInfo():
 
 
 if __name__ == '__main__':
-	app.run(SERVER_NAME, SERVER_PORT)
+	app.run()
