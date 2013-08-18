@@ -1,3 +1,28 @@
+'''
+GeneLookup.py is a web application developed for the ATGU to allow web based access to a compiled and curated
+list of de novo mutations for the majority of the genes in the genome.  In addition to the mutation information
+the program provides general information about the gene, evolutionary constraint scores, and probability values
+for the mutations found given the sample size.
+
+Required local software:
+	See requirements.txt
+
+Required local files:
+	A 'templates' directory containing:
+		GeneLookupRetry.html
+		MutationDistribution.html
+		StudyLists.html
+	A 'static' directory containing:
+		arrow_closed.jpg
+		arrow_open.jpg
+	A 'data' directory containing:
+		File pairs for each mutation group.
+	constrained_1003.txt
+	esp6500_ac10_Zdata.txt
+	fixed_mut_prob_fs_adjdepdiv.txt
+	overlap2mutprobs.py
+	ranked_z_genes.txt
+'''
 from flask import Flask, request, Response, session, g, redirect, url_for, \
 	abort, render_template, flash, send_from_directory, send_file
 import os
@@ -69,18 +94,24 @@ for group in groupsOfStudies:
 	triosPerStudyGroup.append(numTrios)
 	numTrios = 0
 
+
+
+#A simple float rounding function
 def round_to_n(x, n):
     if n < 1:
         raise ValueError("number of significant digits must be >= 1")
-    # Use %e format to get the n most significant digits, as a string.
     format = "%." + str(n-1) + "e"
     as_string = format % x
     return float(as_string)
+
+
 
 @app.route('/')
 def initialize():
 	return render_template('GeneLookupRetry.html', geneMutations=None)
 
+
+#This handles pretty much everything and is called when the user enters a gene
 downloadableInfo = StringIO.StringIO()
 theGene = ''
 mutsForFile = []
@@ -91,12 +122,15 @@ def lookupGene():
 		theGene = theGene.upper()
 		groupsMutsReturn = []
 		downloadableInfo = StringIO.StringIO()
+		
+		#This establishes if the gene is constrained
 		constrainList = open('constrained_1003.txt', 'r')
 		constrained = False
 		for line in constrainList:
 			if theGene == line.replace('\n', ''):
 				constrained = True
 		
+		#This gets all the mutations associated with the gene
 		for group in groupsOfMutations:
 			groupMut = []
 			for mutation in group:
@@ -107,6 +141,7 @@ def lookupGene():
 		
 		nonStringIO = theGene+'\n\n'
 		
+		#This section parses out the gene data and Z scores
 		geneData = open('esp6500_ac10_Zdata.txt', 'r')
 		allData = geneData.read()
 		eachGene = allData.split('\r')
@@ -145,6 +180,7 @@ def lookupGene():
 		for group in groupsMutsReturn:
 			group[len(group)-1] = group[len(group)-1].rstrip()
 		
+		#This section gets the probabilities of mutation for the gene
 		overlapMutProbsReturns = []
 		poppableNumTrios = list(triosPerStudyGroup)
 		holderNumTrios = list(triosPerStudyGroup)
@@ -156,39 +192,38 @@ def lookupGene():
 			for mutNum in range(0, len(group)-1):
 				stringMutsToRun += group[mutNum][1]+'/'
 			stringMutsToRun = stringMutsToRun[:-1]
-			print "stringMutsToRun "+stringMutsToRun
 			multMutsFile = open('multMutsFile.txt', 'w+')
-			multMutsFile
 			multMutsFile.write(stringMutsToRun)
 			multMutsFile.seek(0)
-			print "MULTMUTSFILE "+multMutsFile.read()
-			print stringMutsToRun
 			multMutsFile.seek(0)
 			if len(group) > 1:
 				argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
 				theSignificance = overlap2mutprobs.main(argsForScript)
-				print "############################################################################"
-				print "############################################################################"
-				print theSignificance
+				for line in theSignificance.split('\n'):
+					oldLine=line
+					if len(line) >= 10:
+						line = line.replace(line.split('\t')[9], str(round_to_n(float(line.split('\t')[9]), 3)), 1)
+					theSignificance = theSignificance.replace(oldLine, line, 1)
 				overlapMutProbsReturns.append(theSignificance)
 			else:
-				print "noMutations"
 				overlapMutProbsReturns.append("noMutations")
 			multMutsFile.close()
 		
+		#This section gets the constraint ranking
 		zRankFile = open('ranked_z_genes.txt', 'r')
 		zRankOutOf = len(zRankFile.read().split('\n'))-2
 		zRankFile.seek(0)
 		zRank = None
 		for line in zRankFile:
-			if theGene in line:
+			if theGene == line.split()[0]:
 				zRank = line.split()[1]
-				print str(zRank)+'/'+str(zRankOutOf)
-			#print theGene+' '+line
+		
 		return render_template('GeneLookupRetry.html', geneMutations=groupsMutsReturn, isConstrained = constrained, strForDwnld = nonStringIO, otherGeneInfo = geneSuppInfo, mutProbs = overlapMutProbsReturns, triosPerStudy = holderNumTrios, secondTriosPerStudy = holderTwoNumTrios, theGene=theGene, zRank = zRank, zRankOutOf=zRankOutOf)
 	else:
 		return redirect(url_for('initialize'))
 
+
+#Just a simple function to allow gene info downloads
 @app.route('/downloadGeneMuts/<downloadString>/<gene>')
 def downloadGeneMuts(downloadString, gene):
 	downloadableInfo = StringIO.StringIO()
@@ -198,6 +233,8 @@ def downloadGeneMuts(downloadString, gene):
 	splitTime = str(time).rsplit('.', 1)[0]
 	return send_file(downloadableInfo, attachment_filename= "ATGU Gene Lookup "+gene+" "+splitTime+".txt", as_attachment=True)
 
+
+#Full constraint score list
 @app.route('/downloadConstraints')
 def downloadConstraints():
 	dwnldConst = StringIO.StringIO()
@@ -213,6 +250,8 @@ def downloadConstraints():
 	splitTime = str(time).rsplit('.', 1)[0]
 	return send_file(dwnldConst, attachment_filename="ATGUConstraintScores "+splitTime+".txt", as_attachment=True)
 
+
+#For mainpage studies used section
 @app.route('/getStudies')
 def getStudies():
 	studyInfo = []
@@ -221,6 +260,8 @@ def getStudies():
 		studyInfo.append([group[len(group)-2], len(group)-3, numTriosHolder.pop(0)])
 	return render_template('StudyLists.html', studyInfo=studyInfo)
 
+
+#For mainpage mutation type distribution
 @app.route('/getMutationInfo')
 def getMutInfo():
 	mutDistInfo = []
@@ -240,6 +281,8 @@ def getMutInfo():
 		thisGroup[3][1] = round_to_n((float(thisGroup[3][0])/float(totMuts))*100, 3)
 		mutDistInfo.append(thisGroup)
 	return render_template('MutationDistribution.html', mutDistInfo=mutDistInfo)
+
+
 
 if __name__ == '__main__':
 	app.run(SERVER_NAME, SERVER_PORT)

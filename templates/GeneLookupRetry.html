@@ -68,7 +68,7 @@
 	</style>
 </head>
 <body>
-	<h1 style="text-align:center" class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
+	<h1 style="text-align:center" class="pageTitle">Welcome to the ATGU's GMC (Gene-Mutation-Constraint) Server</h1>
 <!--<div class="col-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1">-->
 <div class="row">
 <div class="col-12 col-sm-11 col-lg-11">
@@ -112,7 +112,8 @@
 		<a href={{url_for('downloadConstraints')}}><button type="button" class="btn btn-default btn-xs" style="display: block;">Download Constraint Scores</button></a>
 		<p><br><b>Other Information Sources:</b></p>
 		<a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{otherGeneInfo[1]}}&search={{otherGeneInfo[1]}}">Gene Cards Link for {{otherGeneInfo[1]}}</a>
-		<a href="http://www.ncbi.nlm.nih.gov/gene/?term={{otherGeneInfo[1]}}"><br>OMIM Link for {{otherGeneInfo[1]}}</a>
+		<a href="http://www.ncbi.nlm.nih.gov/gene/?term={{otherGeneInfo[1]}}"><br>NCBI Link for {{otherGeneInfo[1]}}</a>
+		<a href="http://www.omim.org/search?limit=1&search={{otherGeneInfo[1]}}"><br>OMIM Link for {{otherGeneInfo[1]}}</a>
 </div>
 </div>
 </div>
