@@ -29,6 +29,7 @@ import os
 import StringIO
 import overlap2mutprobs
 from datetime import datetime
+import os
 
 DEBUG = True
 app = Flask(__name__)
@@ -37,6 +38,7 @@ application = app
 
 SERVER_NAME = '127.0.0.1'
 SERVER_PORT = 5003
+DATA_DIR = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 studyFiles=[]
 mutationFiles=[]
@@ -124,7 +126,7 @@ def lookupGene():
 		downloadableInfo = StringIO.StringIO()
 		
 		#This establishes if the gene is constrained
-		constrainList = open('constrained_1003.txt', 'r')
+		constrainList = open(DATA_DIR + 'constrained_1003.txt', 'r')
 		constrained = False
 		for line in constrainList:
 			if theGene == line.replace('\n', ''):
@@ -142,7 +144,7 @@ def lookupGene():
 		nonStringIO = theGene+'\n\n'
 		
 		#This section parses out the gene data and Z scores
-		geneData = open('esp6500_ac10_Zdata.txt', 'r')
+		geneData = open(DATA_DIR + 'esp6500_ac10_Zdata.txt', 'r')
 		allData = geneData.read()
 		eachGene = allData.split('\r')
 		genesArray = []
@@ -192,12 +194,12 @@ def lookupGene():
 			for mutNum in range(0, len(group)-1):
 				stringMutsToRun += group[mutNum][1]+'/'
 			stringMutsToRun = stringMutsToRun[:-1]
-			multMutsFile = open('multMutsFile.txt', 'w+')
+			multMutsFile = open(DATA_DIR + 'multMutsFile.txt', 'w+')
 			multMutsFile.write(stringMutsToRun)
 			multMutsFile.seek(0)
 			multMutsFile.seek(0)
 			if len(group) > 1:
-				argsForScript = ['multMutsFile.txt', 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
+				argsForScript = [DATA_DIR + 'multMutsFile.txt', DATA_DIR + 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
 				theSignificance = overlap2mutprobs.main(argsForScript)
 				for line in theSignificance.split('\n'):
 					oldLine=line
@@ -210,7 +212,7 @@ def lookupGene():
 			multMutsFile.close()
 		
 		#This section gets the constraint ranking
-		zRankFile = open('ranked_z_genes.txt', 'r')
+		zRankFile = open(DATA_DIR + 'ranked_z_genes.txt', 'r')
 		zRankOutOf = len(zRankFile.read().split('\n'))-2
 		zRankFile.seek(0)
 		zRank = None
