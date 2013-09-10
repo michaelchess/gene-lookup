@@ -1,232 +1,262 @@
 <!DOCTYPE html>
 <head>
-	<title>Gene Lookup</title>
-	<!--<h1 class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
-	<link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">-->
-	<!--<link rel="stylesheet" href="http://getbootstrap.com/assets/css/docs.css">-->
-	<link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
-	<!--<script src="http://getbootstrap.com/dist/js/bootstrap.js"></script>-->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-	<!--<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-affix.js" type="text/javascript" charset="utf-8"></script>-->
-	<!--Use This bootstrap reference.  I'm not sure why the other one stopped working-->
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
-	<style>
-		p{
-			font-size: 1.15em;
-		}
-		/*@media screen and (min-width: 768px){*/
-		.affix{
-			top: 0;
-			display: block;
-		}
-		@media screen and (max-width: 768px){
-		.affix{
-			position: static;
-		}
-		
-		}
-		.topStuff{
-			/*position: relative;
-			left: 1em;*/
-			margin-left: 1em;
-		}
-		@media screen and (max-width: 768px){
-		.topStuff{
-			left: 0em;
-			position: static;
-		}
-		}
-		@media screen and (min-width: 768px){
-		.mutations{
-			/*position: relative;
-			left: 5em;*/
-			margin-left: 5em;
-		}
-		}
-		dd{
-			margin-left: 1em;
-		}
-		@media screen and (min-width: 768px){
-		.footer{
-			position: fixed;
-			bottom: 0%;
-		}
-		}
-		/*div.affix-bottom{
-			width: 270px;
-			position: absolute;
-			display: block;
-		}
-		div.affix-top{
-			width: 270px;
-			position: fixed;
-			top: 200px;
-			display: block;
-		}*/
-	</style>
+    <title>Gene Lookup</title>
+    <!--<h1 class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
+    <link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="http://getbootstrap.com/assets/css/docs.css">-->
+    <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
+    <!--<script src="http://getbootstrap.com/dist/js/bootstrap.js"></script>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <!--<script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-affix.js" type="text/javascript" charset="utf-8"></script>-->
+    <!--Use This bootstrap reference.  I'm not sure why the other one stopped working-->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js" type="text/javascript"
+            charset="utf-8"></script>
+    <style>
+        p {
+            font-size: 1.15em;
+        }
+
+            /*@media screen and (min-width: 768px){*/
+        .affix {
+            top: 0;
+            display: block;
+        }
+
+        @media screen and (max-width: 768px) {
+            .affix {
+                position: static;
+            }
+
+        }
+
+        .topStuff {
+            /*position: relative;
+            left: 1em;*/
+            margin-left: 1em;
+        }
+
+        @media screen and (max-width: 768px) {
+            .topStuff {
+                left: 0em;
+                position: static;
+            }
+        }
+
+        @media screen and (min-width: 768px) {
+            .mutations {
+                /*position: relative;
+                left: 5em;*/
+                margin-left: 5em;
+            }
+        }
+
+        dd {
+            margin-left: 1em;
+        }
+
+        .footer {
+            padding-top: 50px;
+        }
+
+            /*div.affix-bottom{
+                width: 270px;
+                position: absolute;
+                display: block;
+            }
+            div.affix-top{
+                width: 270px;
+                position: fixed;
+                top: 200px;
+                display: block;
+            }*/
+    </style>
 </head>
 <body>
-	<h1 style="text-align:center" class="pageTitle">Welcome to the ATGU's GMC (Gene-Mutation-Constraint) Server</h1>
+<h1 style="text-align:center" class="pageTitle">Welcome to the ATGU's GMC (Gene-Mutation-Constraint) Server</h1>
 <!--<div class="col-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1">-->
 <div class="row">
-<div class="col-12 col-sm-11 col-lg-11">
-<div class="topStuff">
-	<form class="form-inline" action="{{ url_for('lookupGene') }}" method="POST">
-		<p style="display: inline;">Enter a gene:</p>
-		<input style="width: 200px; height: 30px;" class="form-control" type="text" name="requestedGene" placeholder="Ex: SCN2A">
-	</form>
-	<p style="font-size: 0.85em;">---------------------------------------------------------------<br>
-	This is a test version of a new utility that provides access to expected mutation probabilities, constraint scores based on deviation of observed standing variation patterns from this model (higher values = more constrained (fewer variants observed than expected), and a table and analysis of published and unpublished de novo mutations in several major disease categories from a curated internal database.</p>
-	</div>
-	{% if geneMutations != None: %}
-	{% if otherGeneInfo != None: %}
+    <div class="col-12 col-sm-11 col-lg-11">
+        <div class="topStuff">
+            <form class="form-inline" action="{{ url_for('lookupGene') }}" method="POST">
+                <p style="display: inline;">Enter a gene:</p>
+                <input style="width: 200px; height: 30px;" class="form-control" type="text" name="requestedGene"
+                       placeholder="Ex: SCN2A">
+            </form>
+            <p style="font-size: 0.85em;">---------------------------------------------------------------<br>
+                This is a test version of a new utility that provides access to expected mutation probabilities,
+                constraint scores based on deviation of observed standing variation patterns from this model (higher
+                values = more constrained (fewer variants observed than expected), and a table and analysis of published
+                and unpublished de novo mutations in several major disease categories from a curated internal database.
+            </p>
+        </div>
+        {% if geneMutations != None: %}
+            {% if otherGeneInfo != None: %}
 
+                <div class="row">
+                <div class="col-12 col-sm-4 col-lg-4">
+                    <div class="affix-top" data-spy="affix" data-offset-top="150">
+                        <div style="margin-left: 3em;">
+                            <h1 class="pageTitle">{{ otherGeneInfo[1] }}</h1>
+
+                            <div style="margin-left: 2em;">
+                                <!--<div class="affix" style="top: 200px; left: 100px;,">-->
+                                <p>Chromosome: {{ otherGeneInfo[2] }}</p>
+
+                                <p>Start--Stop: {{ otherGeneInfo[3] }}--{{ otherGeneInfo[4] }}</p>
+
+                                <p># Base Pairs (coding region): {{ otherGeneInfo[5] }}</p>
+                                <dl>
+                                    <dt><b>Per Trio Probability of Mutation:</b></dt>
+                                    <dd>Synonymous: {{ otherGeneInfo[7] }}</dd>
+                                    <dd>Missense: {{ otherGeneInfo[8] }}</dd>
+                                    <dd>Loss of Function: {{ otherGeneInfo[9] }}</dd>
+                                    <dt><b>Constraint Scores:</b></dt>
+                                    <dd style="color: #0000FF;">Z syn: {{ otherGeneInfo[23] }}</dd>
+                                    <dd style="color: #FF0000;">Z mis: {{ otherGeneInfo[24] }}</dd>
+                                    <dd style="color: #FF0000;">Z LoF: {{ otherGeneInfo[26] }}</dd>
+                                </dl>
+                                {% if isConstrained == True %}
+                                    <p>This gene is constrained.</p>
+                                {% else %}
+                                    <p>This gene is not constrained.</p>
+                                {% endif %}
+                                <p>Constraint Rank:
+                                    {% if zRank != None: %}{{ zRank }}/{{ zRankOutOf }}{% else: %}NA{% endif %}</p>
+                                <a href={{ url_for('downloadConstraints') }}>
+                                    <button type="button" class="btn btn-default btn-xs" style="display: block;">
+                                        Download Constraint Scores
+                                    </button>
+                                </a>
+
+                                <p><br><b>Other Information Sources:</b></p>
+                                <a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{ otherGeneInfo[1] }}&search={{ otherGeneInfo[1] }}">Gene
+                                    Cards Link for {{ otherGeneInfo[1] }}</a>
+                                <a href="http://www.ncbi.nlm.nih.gov/gene/?term={{ otherGeneInfo[1] }}"><br>NCBI Link
+                                    for {{ otherGeneInfo[1] }}</a>
+                                <a href="http://www.omim.org/search?limit=1&search={{ otherGeneInfo[1] }}"><br>OMIM Link
+                                    for {{ otherGeneInfo[1] }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-8 col-lg-8">
+                    <div class="mutations">
+                        <h2><br>Mutations:</h2>
+                        <h5>
+                            <button type="button" class="btn btn-default btn-sm" onclick="showAll()">Show All</button>
+                            <button type="button" class="btn btn-default btn-sm" onclick="hideAll()">Hide All</button>
+                        </h5>
+
+                        {% for group in geneMutations: %}
+                            <h3><a href="javascript:ShowHide('{{ group[(group|length)-1] }}')"><b>
+                                {{ group[(group|length)-1] }}</b>
+                                <img id="{{ group[(group|length)-1] }}img"
+                                     src="{{ url_for('static', filename='arrow_closed.jpg') }}" width="28px"/>
+                            </a></h3>
+                            <div class="studyGroup" id="{{ group.pop() }}" style="display: none;">
+                                {% if group|length >= 1: %}
+                                    <p>In {{ triosPerStudy.pop(0) }} combined trios.</p>
+                                    <table class="table">
+                                        <tr>
+                                            <th>Mutation Type</th>
+                                            <th>AAchange</th>
+                                            <th>Chr</th>
+                                            <th>Pos</th>
+                                            <th>Ref</th>
+                                            <th>Alt</th>
+                                            <th>Study</th>
+                                            <th>Pubmed ID</th>
+                                        </tr>
+                                        {% for mutation in group: %}
+                                            <tr>
+                                                <td>{{ mutation[1] }}</td>
+                                                <td>{{ mutation[2] }}</td>
+                                                <td>{{ mutation[3] }}</td>
+                                                <td>{{ mutation[4] }}</td>
+                                                <td>{{ mutation[5] }}</td>
+                                                <td>{{ mutation[6] }}</td>
+                                                <td>{{ mutation[8][2] }} with {{ mutation[8][1] }} trios</td>
+                                                {% if 'www' in mutation[8][3]: %}
+                                                    <td><a href="{{ mutation[8][3] }}"
+                                                           target="_blank">{{ mutation[8][3].rsplit('/', 1)[1] }}</a>
+                                                    </td>
+                                                {% else: %}
+                                                    <td>{{ mutation[8][3] }}</td>
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                    <p><b>Probabilities of Mutation:</b></p>
+                                    {% if mutProbs[0].split('\n')|length > 1: %}
+                                        <script>
+                                            document.write("<p>P({{mutProbs[0].split('\n')[0].split('\t')[2]}} LoF in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[1].split('\t')[9]}}</p>");
+                                            document.write("<p>P(" + (parseInt({{mutProbs[0].split('\n')[0].split('\t')[3]}}) + parseInt({{mutProbs[0].split('\n')[0].split('\t')[2]}})).toString() + " LoF+Missense in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[0].split('\t')[9]}}</p>");
+                                        </script>
+                                    {% endif %}
+                                    {% if secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}{% endif %}
+                                {% elif triosPerStudy.pop(0) and secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}
+                                    <p>No mutations found in this study group.</p>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld, gene=theGene) }}">
+                            <button class="btn btn-default btn-xs" type="button">Download This Data</button>
+                        </a>
+                    </div>
+                </div>
+            {% else: %}
+                <p>Gene not found in our database.</p>
+            {% endif %}
+        {% endif %}
+        </div>
+    </div>
+</div>
 <div class="row">
-<div class="col-12 col-sm-4 col-lg-4">
-<div class="affix-top" data-spy="affix" data-offset-top="150">
-<div style="margin-left: 3em;">
-		<h1 class="pageTitle">{{otherGeneInfo[1]}}</h1>
-<div style="margin-left: 2em;">
-<!--<div class="affix" style="top: 200px; left: 100px;,">-->
-		<p>Chromosome: {{otherGeneInfo[2]}}</p>
-		<p>Start--Stop: {{otherGeneInfo[3]}}--{{otherGeneInfo[4]}}</p>
-		<p># Base Pairs (coding region): {{otherGeneInfo[5]}}</p>
-		<dl>
-			<dt><b>Per Trio Probability of Mutation:</b></dt>
-				<dd>Synonymous: {{otherGeneInfo[7]}}</dd>
-				<dd>Missense: {{otherGeneInfo[8]}}</dd>
-				<dd>Loss of Function: {{otherGeneInfo[9]}}</dd>
-			<dt><b>Constraint Scores:</b></dt>
-				<dd style="color: #0000FF;">Z syn: {{otherGeneInfo[23]}}</dd>
-				<dd style="color: #FF0000;">Z mis: {{otherGeneInfo[24]}}</dd>
-				<dd style="color: #FF0000;">Z LoF: {{otherGeneInfo[26]}}</dd>
-		</dl>
-		{% if isConstrained == True%}
-			<p>This gene is constrained.</p>
-		{% else %}
-			<p>This gene is not constrained.</p>
-		{% endif %}
-		<p>Constraint Rank: {% if zRank != None: %}{{zRank}}/{{zRankOutOf}}{% else: %}NA{% endif %}</p>
-		<a href={{url_for('downloadConstraints')}}><button type="button" class="btn btn-default btn-xs" style="display: block;">Download Constraint Scores</button></a>
-		<p><br><b>Other Information Sources:</b></p>
-		<a href="http://www.genecards.org/cgi-bin/carddisp.pl?gene={{otherGeneInfo[1]}}&search={{otherGeneInfo[1]}}">Gene Cards Link for {{otherGeneInfo[1]}}</a>
-		<a href="http://www.ncbi.nlm.nih.gov/gene/?term={{otherGeneInfo[1]}}"><br>NCBI Link for {{otherGeneInfo[1]}}</a>
-		<a href="http://www.omim.org/search?limit=1&search={{otherGeneInfo[1]}}"><br>OMIM Link for {{otherGeneInfo[1]}}</a>
+    <div class="col-12 col-sm-6 col-lg-6">
+        <div class="footer" id="footer">
+            <p id="legal" style="margin: 0; font-size: 0.75em; text-align: center;">Copyright © 2013 ATGU. All Rights
+                Reserved <br>
+                <a href="http://www.massgeneral.org">Massachusetts General Hospital</a> |
+                <a href="http://chgr.mgh.harvard.edu">Center for Human Genetic Research</a><br>
+                Developed by: Michael Chess</p>
+        </div>
+    </div>
 </div>
-</div>
-</div>
-</div>
-<div class="col-12 col-sm-8 col-lg-8">
-<div class="mutations">
-		<h2><br>Mutations:</h2>
-		<h5><button type="button" class="btn btn-default btn-sm" onclick="showAll()">Show All</button>
-		<button type="button" class="btn btn-default btn-sm" onclick="hideAll()">Hide All</button></h5>
-		
-		{% for group in geneMutations: %}
-			<h3><a href="javascript:ShowHide('{{ group[(group|length)-1] }}')"><b>{{ group[(group|length)-1] }}</b>
-			<img id="{{ group[(group|length)-1] }}img" src="{{url_for('static', filename='arrow_closed.jpg')}}" width="28px"/>
-			</a></h3>
-		<div class="studyGroup" id="{{group.pop()}}" style="display: none;">
-			{% if group|length >= 1: %}
-			<p>In {{triosPerStudy.pop(0)}} combined trios.</p>
-			<table class="table">
-				<tr>
-					<th>Mutation Type</th>
-					<th>AAchange</th>
-					<th>Chr</th>
-					<th>Pos</th>
-					<th>Ref</th>
-					<th>Alt</th>
-					<th>Study</th>
-					<th>Pubmed ID</th>
-				</tr>
-				{% for mutation in group: %}
-					<tr>
-						<td>{{mutation[1]}}</td>
-						<td>{{mutation[2]}}</td>
-						<td>{{mutation[3]}}</td>
-						<td>{{mutation[4]}}</td>
-						<td>{{mutation[5]}}</td>
-						<td>{{mutation[6]}}</td>
-						<td>{{mutation[8][2]}} with {{mutation[8][1]}} trios</td>
-						{% if 'www' in mutation[8][3]: %}
-							<td><a href="{{mutation[8][3]}}" target="_blank">{{mutation[8][3].rsplit('/', 1)[1]}}</a></td>
-						{% else: %}
-							<td>{{mutation[8][3]}}</td>
-						{% endif %}
-					</tr>
-				{% endfor %}
-			</table>
-			<p><b>Probabilities of Mutation:</b></p>
-				{% if mutProbs[0].split('\n')|length > 1: %}
-				<script>
-					document.write("<p>P({{mutProbs[0].split('\n')[0].split('\t')[2]}} LoF in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[1].split('\t')[9]}}</p>");
-					document.write("<p>P("+(parseInt({{mutProbs[0].split('\n')[0].split('\t')[3]}})+parseInt({{mutProbs[0].split('\n')[0].split('\t')[2]}})).toString()+" LoF+Missense in {{secondTriosPerStudy[0]}} trios)= {{mutProbs[0].split('\n')[0].split('\t')[9]}}</p>");
-				</script>
-				{% endif %}
-			{% if secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}{% endif %}
-			{% elif triosPerStudy.pop(0) and secondTriosPerStudy.pop(0) and mutProbs.pop(0): %}
-				<p>No mutations found in this study group.</p>
-			{% endif %}
-		</div>
-		{% endfor %}
-		<a href="{{ url_for('downloadGeneMuts', downloadString=strForDwnld, gene=theGene) }}">
-			<button class="btn btn-default btn-xs" type="button">Download This Data</button>
-		</a>
-</div>
-</div>
-	{% else: %}
-		<p>Gene not found in our database.</p>
-	{% endif %}
-	{% endif %}
-</div>
-</div>
-</div>
-<div class="row">
-<div class="col-12 col-sm-6 col-lg-6">
-	<div class="footer" id="footer">
-		<p id="legal" style="margin: 0; font-size: 0.75em; text-align: center;">Copyright © 2013 ATGU. All Rights Reserved <br>
-		<a href="http://www.massgeneral.org">Massachusetts General Hospital</a> | 
-		<a href="http://chgr.mgh.harvard.edu">Center for Human Genetic Research</a><br>
-		Developed by: Michael Chess</p>
-	</div>
-</div>
-</div>
-	<script type="text/javascript">
-		function addStringsInts(a, b){
-			alert("addingStringInts");
-			return (parseInt(a)+parseInt(b)).toString();
-		}
-		function showAll(){
-			divs = document.getElementsByClassName('studyGroup');
-			for(var i = 0; i < divs.length; i++){
-				if(divs[i].id != 'page'){
-					//ShowHide(divs[i].id);
-					divs[i].style.display = 'inline';
-					document.getElementById(divs[i].id+'img').src = "{{url_for('static', filename='arrow_open.jpg')}}";
-				}
-			}
-		}
-		function hideAll(){
-			divs = document.getElementsByClassName('studyGroup');
-			for(var i = 0; i < divs.length; i++){
-				if(divs[i].id != 'page'){
-					divs[i].style.display = 'none';
-					document.getElementById(divs[i].id+'img').src = "{{url_for('static', filename='arrow_closed.jpg')}}";
-				}
-			}
-		}
-		function ShowHide(divId){
-			if(document.getElementById(divId).style.display == 'none'){
-				document.getElementById(divId).style.display = 'inline';
-				document.getElementById(divId+'img').src = "{{url_for('static', filename='arrow_open.jpg')}}";
-			} else {
-				document.getElementById(divId).style.display = 'none';
-				document.getElementById(divId+'img').src = "{{url_for('static', filename='arrow_closed.jpg')}}";
-			}
-		}
-	</script>
+<script type="text/javascript">
+    function addStringsInts(a, b) {
+        alert("addingStringInts");
+        return (parseInt(a) + parseInt(b)).toString();
+    }
+    function showAll() {
+        divs = document.getElementsByClassName('studyGroup');
+        for (var i = 0; i < divs.length; i++) {
+            if (divs[i].id != 'page') {
+                //ShowHide(divs[i].id);
+                divs[i].style.display = 'inline';
+                document.getElementById(divs[i].id + 'img').src = "{{url_for('static', filename='arrow_open.jpg')}}";
+            }
+        }
+    }
+    function hideAll() {
+        divs = document.getElementsByClassName('studyGroup');
+        for (var i = 0; i < divs.length; i++) {
+            if (divs[i].id != 'page') {
+                divs[i].style.display = 'none';
+                document.getElementById(divs[i].id + 'img').src = "{{url_for('static', filename='arrow_closed.jpg')}}";
+            }
+        }
+    }
+    function ShowHide(divId) {
+        if (document.getElementById(divId).style.display == 'none') {
+            document.getElementById(divId).style.display = 'inline';
+            document.getElementById(divId + 'img').src = "{{url_for('static', filename='arrow_open.jpg')}}";
+        } else {
+            document.getElementById(divId).style.display = 'none';
+            document.getElementById(divId + 'img').src = "{{url_for('static', filename='arrow_closed.jpg')}}";
+        }
+    }
+</script>
 </body>
 </html>
