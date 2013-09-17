@@ -42,18 +42,18 @@ DATA_DIR = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 studyFiles=[]
 mutationFiles=[]
-for file in os.listdir('data'):
+for file in os.listdir(DATA_DIR + 'data'):
 	if 'control' not in file:
 		if 'header' in file:
-			studyFiles.append(open('data/'+file, 'r'))
+			studyFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
 		elif 'dnm' in file:
-			mutationFiles.append(open('data/'+file, 'r'))
-for file in os.listdir('data'):
+			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
+for file in os.listdir(DATA_DIR + 'data'):
 	if 'control' in file:
 		if 'header' in file:
-			studyFiles.append(open('data/'+file, 'r'))
+			studyFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
 		elif 'dnm' in file:
-			mutationFiles.append(open('data/'+file, 'r'))
+			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
 
 groupsOfStudies = []
 for file in studyFiles:
