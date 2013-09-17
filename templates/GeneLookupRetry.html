@@ -3,7 +3,7 @@
     <title>Gene Lookup</title>
     <!--<h1 class="pageTitle">Welcome to the ATGU's Gene Lookup</h1>
     <link rel="stylesheet" type="text/css" href="http://atgu.mgh.harvard.edu/media/style.css"/>-->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
     <!--<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css">-->
     <!--<link rel="stylesheet" href="http://getbootstrap.com/assets/css/docs.css">-->
     <link rel="stylesheet" href="http://getbootstrap.com/dist/css/bootstrap.css">
@@ -18,30 +18,10 @@
             font-size: 1.15em;
         }
 
-            /*@media screen and (min-width: 768px){*/
-        .affix {
-            top: 0;
-            display: block;
-        }
-
-        @media screen and (max-width: 768px) {
-            .affix {
-                position: static;
-            }
-
-        }
-
         .topStuff {
             /*position: relative;
             left: 1em;*/
             margin-left: 1em;
-        }
-
-        @media screen and (max-width: 768px) {
-            .topStuff {
-                left: 0em;
-                position: static;
-            }
         }
 
         @media screen and (min-width: 768px) {
@@ -60,22 +40,12 @@
             padding-top: 50px;
         }
 
-            /*div.affix-bottom{
-                width: 270px;
-                position: absolute;
-                display: block;
-            }
-            div.affix-top{
-                width: 270px;
-                position: fixed;
-                top: 200px;
-                display: block;
-            }*/
     </style>
 </head>
 <body>
 <h1 style="text-align:center" class="pageTitle">Welcome to the ATGU's GMC (Gene-Mutation-Constraint) Server</h1>
 <!--<div class="col-12 col-sm-10 col-sm-offset-1 col-lg-10 col-lg-offset-1">-->
+<div class="container">
 <div class="row">
     <div class="col-12 col-sm-11 col-lg-11">
         <div class="topStuff">
@@ -91,12 +61,11 @@
                 and unpublished de novo mutations in several major disease categories from a curated internal database.
             </p>
         </div>
+    </div>
         {% if geneMutations != None: %}
             {% if otherGeneInfo != None: %}
 
-                <div class="row">
-                <div class="col-12 col-sm-4 col-lg-4">
-                    <div class="affix-top" data-spy="affix" data-offset-top="150">
+                <div class="col-12 col-sm-3 col-lg-3">
                         <div style="margin-left: 3em;">
                             <h1 class="pageTitle">{{ otherGeneInfo[1] }}</h1>
 
@@ -139,9 +108,8 @@
                                     for {{ otherGeneInfo[1] }}</a>
                             </div>
                         </div>
-                    </div>
                 </div>
-                <div class="col-12 col-sm-8 col-lg-8">
+                <div class="col-12 col-sm-9 col-lg-9">
                     <div class="mutations">
                         <h2><br>Mutations:</h2>
                         <h5>
@@ -158,7 +126,7 @@
                             <div class="studyGroup" id="{{ group.pop() }}" style="display: none;">
                                 {% if group|length >= 1: %}
                                     <p>In {{ triosPerStudy.pop(0) }} combined trios.</p>
-                                    <table class="table">
+                                    <table class="table table-condensed">
                                         <tr>
                                             <th>Mutation Type</th>
                                             <th>AAchange</th>
@@ -177,7 +145,7 @@
                                                 <td>{{ mutation[4] }}</td>
                                                 <td>{{ mutation[5] }}</td>
                                                 <td>{{ mutation[6] }}</td>
-                                                <td>{{ mutation[8][2] }} with {{ mutation[8][1] }} trios</td>
+                                                <td>{{ mutation[8][2] }} </td>
                                                 {% if 'www' in mutation[8][3]: %}
                                                     <td><a href="{{ mutation[8][3] }}"
                                                            target="_blank">{{ mutation[8][3].rsplit('/', 1)[1] }}</a>
@@ -211,10 +179,8 @@
             {% endif %}
         {% endif %}
         </div>
-    </div>
-</div>
 <div class="row">
-    <div class="col-12 col-sm-6 col-lg-6">
+    <div class="col-12">
         <div class="footer" id="footer">
             <p id="legal" style="margin: 0; font-size: 0.75em; text-align: center;">Copyright © 2013 ATGU. All Rights
                 Reserved <br>
@@ -223,6 +189,8 @@
                 Developed by: Michael Chess</p>
         </div>
     </div>
+</div>
+</div>
 </div>
 <script type="text/javascript">
     function addStringsInts(a, b) {

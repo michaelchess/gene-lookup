@@ -201,10 +201,15 @@ def lookupGene():
 			if len(group) > 1:
 				argsForScript = [DATA_DIR + 'multMutsFile.txt', DATA_DIR + 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
 				theSignificance = overlap2mutprobs.main(argsForScript)
+				print theSignificance.split('\n')
 				for line in theSignificance.split('\n'):
 					oldLine=line
 					if len(line) >= 10:
-						line = line.replace(line.split('\t')[9], str(round_to_n(float(line.split('\t')[9]), 3)), 1)
+						try: 
+							line = line.replace(line.split('\t')[9], str(round_to_n(float(line.split('\t')[9]), 3)), 1)
+						except ValueError: 
+							overlapMutProbsReturns.append("lowCoverage")
+							break
 					theSignificance = theSignificance.replace(oldLine, line, 1)
 				overlapMutProbsReturns.append(theSignificance)
 			else:

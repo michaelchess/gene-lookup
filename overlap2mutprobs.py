@@ -145,18 +145,18 @@ def main(args):
 
         results.extend([plof, plofmis, pmis])#changed order from plof, pmis, plofmis to this
 
-        if results[3] > 0:
-            results = determine_significance(results, plofmis, args[2], 'lofmis')
-            results.append('LoF+mis')
-            thingsToReturn += ('\t'.join(map(str, results)))+'\n'#return string
+        #if results[3] > 0:
+        results = determine_significance(results, plofmis, args[2], 'lofmis')
+        results.append('LoF+mis')
+        thingsToReturn += ('\t'.join(map(str, results)))+'\n'#return string
             #print('\t'.join(map(str, results)))# doesn't need to print
 
-        if results[2] > 1:
-            if results[-1] == 'LoF+mis':
-                results = results[:-4]
-            l_results = determine_significance(results, plof, args[2], 'lof')
-            l_results.append('LoF')
-            thingsToReturn += ('\t'.join(map(str, l_results)))+'\n'#returned string
+        #if results[2] > 1:
+        if results[-1] == 'LoF+mis':
+            results = results[:-4]
+        l_results = determine_significance(results, plof, args[2], 'lof')
+        l_results.append('LoF')
+        thingsToReturn += ('\t'.join(map(str, l_results)))+'\n'#returned string
             #print('\t'.join(map(str, l_results)))# doesn't need to print
     return thingsToReturn
 
