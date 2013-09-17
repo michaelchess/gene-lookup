@@ -1,10 +1,10 @@
 #de novo header file
 ##Controls
-#899 families
+#911 families
 study	num_trios	citation	pubmedlink
 1	264	Zaidi et al. 2013	http://www.ncbi.nlm.nih.gov/pubmed/23665959
 2	343	Iossifov et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22542183
 3	50	O'Roak et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495309
 4	200	Sanders et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/22495306
 5	20	Rauch et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/23020937
-6	22	Xu et al. 2011	http://www.ncbi.nlm.nih.gov/pubmed/21822266
+6	34	Xu et al. 2012	http://www.ncbi.nlm.nih.gov/pubmed/23042115
