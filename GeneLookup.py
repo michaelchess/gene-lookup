@@ -42,18 +42,24 @@ DATA_DIR = os.path.dirname(os.path.abspath(__file__)) + '/'
 
 studyFiles=[]
 mutationFiles=[]
-for file in os.listdir(DATA_DIR + 'data'):
+#for file in os.listdir(DATA_DIR + 'data/'):
+#	if 'header' in file:
+#		studyFiles.append(open(DATA_DIR+'data/'+file, 'r'))
+#	elif 'dnm' in file:
+#		mutationFiles.append(open(DATA_DIR+'data/'+file, 'r'))
+#	if 'dnm' in file
+for file in os.listdir(DATA_DIR + 'data/'):
 	if 'control' not in file:
-		if 'header' in file:
-			studyFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
-		elif 'dnm' in file:
-			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
-for file in os.listdir(DATA_DIR + 'data'):
-	if 'control' in file:
-		if 'header' in file:
-			studyFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
-		elif 'dnm' in file:
-			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
+ 		if 'header' in file:
+ 			studyFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
+ 		elif 'dnm' in file:
+ 			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
+for file in os.listdir(DATA_DIR + 'data/'):
+ 	if 'control' in file:
+ 		if 'header' in file:
+ 			studyFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
+ 		elif 'dnm' in file:
+ 			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
 
 groupsOfStudies = []
 for file in studyFiles:
@@ -64,9 +70,9 @@ for file in studyFiles:
 			studyGroupName = line.replace('##', '')
 		elif not '#' in line:
 			studyGroup.append(line.split('\t'))
-	studyGroupId = file.name.split('_')
+	studyGroupId = file.name.split('/')[-1].split('_')[0]
 	studyGroup.append(studyGroupName)
-	studyGroup.append(studyGroupId[0].replace('data/', ''))
+	studyGroup.append(studyGroupId)
 	groupsOfStudies.append(studyGroup)
 
 groupsOfMutations = []
@@ -74,13 +80,13 @@ triosPerStudyGroup = []
 numTrios = 0
 for file in mutationFiles:
 	mutationGroup =[]
-	theGroup = file.name.replace('data/', '').split('_')
+	name_of_study = file.name.split('/')[-1].split('_')[0]
 	mutStudyGroup = 'NA'
 	for line in file:
 		theMutationInfo = line.split('\t')
 		for group in groupsOfStudies:
 			if len(group) != 0:
-				if theGroup[0] == group[len(group)-1]:
+				if name_of_study == group[len(group)-1]:
 					mutStudyGroup = group[len(group)-2]
 					if not 'study' in theMutationInfo[7]:
 						theMutationInfo.append(group[int(theMutationInfo[7])])
@@ -201,7 +207,6 @@ def lookupGene():
 			if len(group) > 1:
 				argsForScript = [DATA_DIR + 'multMutsFile.txt', DATA_DIR + 'fixed_mut_prob_fs_adjdepdiv.txt', float(numSubjects)]
 				theSignificance = overlap2mutprobs.main(argsForScript)
-				print theSignificance.split('\n')
 				for line in theSignificance.split('\n'):
 					oldLine=line
 					if len(line) >= 10:
