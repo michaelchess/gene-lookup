@@ -61,6 +61,9 @@ for file in os.listdir(DATA_DIR + 'data/'):
  		elif 'dnm' in file:
  			mutationFiles.append(open(DATA_DIR + 'data/'+file, 'r'))
 
+studyFiles = sorted(studyFiles, key=lambda x: x.name)
+mutationFiles = sorted(mutationFiles, key=lambda x: x.name)
+
 groupsOfStudies = []
 for file in studyFiles:
 	studyGroup = []
@@ -74,6 +77,7 @@ for file in studyFiles:
 	studyGroup.append(studyGroupName)
 	studyGroup.append(studyGroupId)
 	groupsOfStudies.append(studyGroup)
+#print groupsOfStudies[0]
 
 groupsOfMutations = []
 triosPerStudyGroup = []
