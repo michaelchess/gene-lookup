@@ -169,7 +169,10 @@ def lookupGene():
 				geneSuppInfo[9] = round_to_n(float(geneSuppInfo[9])*2, 3)
 				geneSuppInfo[23] = round_to_n(float(geneSuppInfo[23]), 3)
 				geneSuppInfo[24] = round_to_n(float(geneSuppInfo[24]), 3)
-				geneSuppInfo[26] = round_to_n(float(geneSuppInfo[26]), 3)
+				if geneSuppInfo[26] == 'NA':
+					continue
+				else:
+					geneSuppInfo[26] = round_to_n(float(geneSuppInfo[26]), 3)
 				break
 		if geneSuppInfo[1] == 'gene':
 			geneSuppInfo = None
