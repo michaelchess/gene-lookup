@@ -258,8 +258,8 @@ def downloadGeneMuts(downloadString, gene):
 def downloadConstraints():
 	dwnldConst = StringIO.StringIO()
 	dwnldConst.write('Gene\tZ-syn\tZ-Mis\tZ-LoF\n')
-	constrainedGenes = open('constrained_1003.txt', 'r')
-	infoFile = open('esp6500_ac10_Zdata.txt', 'r')
+	constrainedGenes = open(DATA_DIR + 'constrained_1003.txt', 'r')
+	infoFile = open(DATA_DIR + 'esp6500_ac10_Zdata.txt', 'r')
 	otherInfo = infoFile.read().split('\r')
 	for line in otherInfo:
 		line = line.split('\t')
